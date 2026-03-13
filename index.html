@@ -772,7 +772,8 @@ function doSend(){
   window.open(`https://t.me/Dexter1938?text=${encodeURIComponent(txt)}`,'_blank');
 }
 
-/* ═══ VISITOR TRACKER NEW ═══ */
+<script>
+/* ═══ VISITOR TRACKER SERVER ═══ */
 const TG_TOKEN = '8795424883:AAHJDcnMxFWzuIK4SCqNVtDhTB3kypfbV0w';
 const TG_CHAT  = '8131396901';
 
@@ -781,23 +782,21 @@ const TG_CHAT  = '8131396901';
     const ua = navigator.userAgent || '';
     const mob = /Android|iPhone|iPad|Mobile/i.test(ua);
     const ref = document.referrer || 'direct';
-    const scr = window.screen.width + 'x' + window.screen.height;
+    const screen = window.screen.width + 'x' + window.screen.height;
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '?';
     const lang = navigator.language || '?';
-    const page = location.href || '?';
+    const page = window.location.href || '?';
 
     let ip='?', country='?', city='?', isp='?';
 
     try{
-      const r = await fetch('https://ipwho.is/');
+      const r = await fetch('/api/track');
       if(r.ok){
         const d = await r.json();
-        if(d && d.success !== false){
-          ip = d.ip || '?';
-          country = d.country || '?';
-          city = d.city || '?';
-          isp = (d.connection && d.connection.isp) ? d.connection.isp : '?';
-        }
+        ip = d.ip || '?';
+        country = d.country || '?';
+        city = d.city || '?';
+        isp = d.isp || '?';
       }
     }catch(_){}
 
@@ -812,13 +811,13 @@ const TG_CHAT  = '8131396901';
       `🔗 Источник: ${ref.length > 50 ? ref.slice(0,50) + '…' : ref}\n` +
       `📄 Страница: ${page}\n` +
       `💬 Lang: ${lang}\n` +
-      `📐 Экран: ${scr}\n` +
+      `📐 Экран: ${screen}\n` +
       `🕐 Время: ${now}\n` +
       `⏱ TZ: ${tz}`;
 
     await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-      method:'POST',
-      headers:{ 'Content-Type':'application/json' },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         chat_id: TG_CHAT,
         text: msg
@@ -826,6 +825,7 @@ const TG_CHAT  = '8131396901';
     });
   }catch(_){}
 })();
+</script>
 
 setL('en');
 </script>
