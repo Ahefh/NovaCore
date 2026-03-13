@@ -1,837 +1,748 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NovaCore — IT Studio & Academy</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="description" content="NovaCore — IT development studio & coding academy. Websites, bots, automation, Python.">
+<meta property="og:title" content="NovaCore — IT Studio & Academy">
+<meta property="og:description" content="We build digital products and teach IT from scratch.">
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Satoshi:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --r:#c8000b;--r2:#e8001a;--r3:#ff3344;--r4:#ff6677;
-  --rg:rgba(200,0,11,.55);--rg2:rgba(200,0,11,.08);
-  --bg:#020101;--bg2:#070202;--bg3:#0e0303;--bg4:#150404;
-  --t:#d0aaaa;--m:#3e1414;--m2:#724040;--m3:#9a5555;--w:#fff0f0;
-  --green:#00e676;--gold:#ffd700;
+  --r:#e60000;--r2:#ff1a1a;--r3:#ff4d4d;--r4:#ff8080;
+  --bg:#050505;--s1:#0d0d0d;--s2:#141414;--s3:#1a1a1a;
+  --w:#f8f4f4;--g1:#888;--g2:#aaa;--g3:#ccc;
+  --bdr:rgba(255,255,255,.06);--bdr-r:rgba(230,0,0,.3);
+  --glow:rgba(230,0,0,.15);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--t);font-family:'Rajdhani',sans-serif;overflow-x:hidden;cursor:none;}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9600;opacity:.28;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");}
-body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9500;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.04) 3px,rgba(0,0,0,.04) 4px);}
+body{background:var(--bg);color:var(--g2);font-family:'Satoshi',sans-serif;overflow-x:hidden;cursor:none;}
 
 /* CURSOR */
-#cx,#cy{position:fixed;border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);}
-#cx{width:7px;height:7px;background:var(--r3);box-shadow:0 0 12px var(--r),0 0 24px rgba(200,0,11,.3);transition:transform .1s;}
-#cy{width:34px;height:34px;border:1px solid rgba(200,0,11,.35);transition:width .2s,height .2s,border-color .2s;}
-.hc #cy{width:58px;height:58px;border-color:var(--r2);}
-.hc #cx{transform:translate(-50%,-50%) scale(1.5);}
+#dot{position:fixed;width:6px;height:6px;background:var(--r2);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);box-shadow:0 0 10px var(--r);transition:transform .08s;}
+#ring{position:fixed;width:32px;height:32px;border:1.5px solid rgba(230,0,0,.5);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s,border-radius .2s;}
+body.hov #dot{transform:translate(-50%,-50%) scale(0);}
+body.hov #ring{width:48px;height:48px;border-radius:6px;border-color:var(--r2);}
 
 /* LOADER */
-#loader{position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;transition:opacity .8s,visibility .8s;}
-#loader.out{opacity:0;visibility:hidden;}
-.l-brand{font-family:'Bebas Neue',sans-serif;font-size:4rem;letter-spacing:14px;display:flex;overflow:hidden;}
-.l-brand span{display:inline-block;transform:translateY(110%);animation:lUp .5s cubic-bezier(.16,1,.3,1) both;}
-.l-brand span:nth-child(1){animation-delay:.04s;color:var(--w);}
-.l-brand span:nth-child(2){animation-delay:.08s;color:var(--w);}
-.l-brand span:nth-child(3){animation-delay:.12s;color:var(--w);}
-.l-brand span:nth-child(4){animation-delay:.16s;color:var(--w);}
-.l-brand span:nth-child(5){animation-delay:.20s;color:var(--r);}
-.l-brand span:nth-child(6){animation-delay:.24s;color:var(--r);}
-.l-brand span:nth-child(7){animation-delay:.28s;color:var(--r);}
-.l-brand span:nth-child(8){animation-delay:.32s;color:var(--r);}
-@keyframes lUp{to{transform:translateY(0);}}
-.l-bar{width:280px;height:1px;background:rgba(255,255,255,.04);overflow:hidden;position:relative;}
-.l-bar::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--r),var(--r3),transparent);transform:translateX(-100%);animation:lSw 1.1s .45s cubic-bezier(.4,0,.2,1) forwards;}
-@keyframes lSw{to{transform:translateX(100%);}}
-.l-sub{font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:5px;color:var(--m2);opacity:0;animation:lF .3s 1.1s forwards;}
-@keyframes lF{to{opacity:.6;}}
+#ldr{position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;transition:opacity .8s,visibility .8s;}
+#ldr.gone{opacity:0;visibility:hidden;}
+.ldr-logo{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:3.5rem;letter-spacing:-2px;overflow:hidden;display:flex;}
+.ldr-logo span{display:inline-block;transform:translateY(110%);animation:slideUp .6s cubic-bezier(.16,1,.3,1) both;}
+.ldr-logo span:nth-child(1){animation-delay:.03s}
+.ldr-logo span:nth-child(2){animation-delay:.06s}
+.ldr-logo span:nth-child(3){animation-delay:.09s}
+.ldr-logo span:nth-child(4){animation-delay:.12s}
+.ldr-logo span:nth-child(5){color:var(--r);animation-delay:.15s}
+.ldr-logo span:nth-child(6){color:var(--r);animation-delay:.18s}
+.ldr-logo span:nth-child(7){color:var(--r);animation-delay:.21s}
+.ldr-logo span:nth-child(8){color:var(--r);animation-delay:.24s}
+@keyframes slideUp{to{transform:translateY(0)}}
+.ldr-bar{width:200px;height:2px;background:rgba(255,255,255,.05);margin-top:24px;overflow:hidden;border-radius:2px;}
+.ldr-bar-fill{height:100%;width:0;background:var(--r);animation:barFill .8s .35s cubic-bezier(.4,0,.2,1) forwards;box-shadow:0 0 12px var(--r);}
+@keyframes barFill{to{width:100%}}
 
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:5000;display:flex;justify-content:space-between;align-items:center;padding:20px 80px;background:linear-gradient(180deg,rgba(2,1,1,.97) 0%,transparent 100%);border-bottom:1px solid rgba(200,0,11,.07);transition:border-color .3s;}
-nav.scrolled{border-color:rgba(200,0,11,.14);}
-.nlogo{display:flex;align-items:center;gap:12px;text-decoration:none;}
-.nmark{width:32px;height:32px;position:relative;display:flex;align-items:center;justify-content:center;}
-.nmark::before{content:'';position:absolute;inset:0;background:rgba(200,0,11,.06);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);border:1px solid rgba(200,0,11,.38);animation:mg 4s ease-in-out infinite;}
-@keyframes mg{0%,100%{box-shadow:0 0 12px rgba(200,0,11,.18);}50%{box-shadow:0 0 28px rgba(200,0,11,.42);}}
-.nmark-inner{width:9px;height:9px;background:var(--r);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);position:relative;z-index:1;box-shadow:0 0 8px var(--r);}
-.nname{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:7px;color:var(--w);}
-.nname em{color:var(--r);font-style:normal;}
-.nul{list-style:none;display:flex;gap:32px;align-items:center;}
-.nul a{font-family:'Share Tech Mono',monospace;font-size:.63rem;letter-spacing:3px;text-transform:uppercase;color:var(--m2);text-decoration:none;transition:color .25s;position:relative;padding-bottom:4px;}
-.nul a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--r);box-shadow:0 0 6px var(--r);transition:width .28s;}
-.nul a:hover{color:var(--r3);}
-.nul a:hover::after{width:100%;}
+nav{position:fixed;top:0;left:0;right:0;z-index:5000;padding:0 64px;height:68px;display:flex;align-items:center;justify-content:space-between;transition:background .3s,backdrop-filter .3s;}
+nav.stuck{background:rgba(5,5,5,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr);}
+.logo{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:1.2rem;letter-spacing:-1px;color:var(--w);text-decoration:none;display:flex;align-items:center;gap:3px;}
+.logo-dot{width:7px;height:7px;background:var(--r);border-radius:50%;box-shadow:0 0 8px var(--r);animation:logoPulse 2.5s ease-in-out infinite;}
+@keyframes logoPulse{0%,100%{box-shadow:0 0 6px var(--r);}50%{box-shadow:0 0 20px var(--r),0 0 40px rgba(230,0,0,.3);}}
+.nav-links{display:flex;align-items:center;gap:28px;}
+.nav-links a{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.5px;color:var(--g1);text-decoration:none;transition:color .2s;text-transform:uppercase;}
+.nav-links a:hover{color:var(--w);}
+.nav-r{display:flex;align-items:center;gap:10px;}
+.lang-sw{display:flex;gap:3px;}
+.lb{font-family:'JetBrains Mono',monospace;font-size:.58rem;padding:5px 10px;border:1px solid transparent;cursor:pointer;transition:all .18s;border-radius:4px;letter-spacing:.5px;background:transparent;}
+.lb.en{color:rgba(100,160,255,.5);border-color:rgba(100,160,255,.15);}
+.lb.en.on,.lb.en:hover{color:#6ba3ff;border-color:rgba(107,163,255,.4);background:rgba(107,163,255,.07);}
+.lb.ru{color:rgba(230,0,0,.4);border-color:rgba(230,0,0,.12);}
+.lb.ru.on,.lb.ru:hover{color:var(--r2);border-color:rgba(230,0,0,.35);background:rgba(230,0,0,.06);}
+.lb.uk{color:rgba(255,210,0,.4);border-color:rgba(255,210,0,.12);}
+.lb.uk.on,.lb.uk:hover{color:#ffd700;border-color:rgba(255,210,0,.4);background:rgba(255,210,0,.06);}
+.nav-cta{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.5px;padding:9px 20px;background:var(--r);color:#fff;border:none;cursor:pointer;text-decoration:none;border-radius:6px;transition:all .22s;text-transform:uppercase;}
+.nav-cta:hover{background:var(--r2);box-shadow:0 0 24px var(--glow),0 4px 16px rgba(0,0,0,.4);transform:translateY(-1px);}
 
-/* LANG SWITCHER */
-.lang-sw{display:flex;gap:5px;margin-left:10px;}
-.lang-btn{font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:2px;padding:6px 12px;border:none;cursor:pointer;transition:all .25s;text-transform:uppercase;clip-path:polygon(4px 0%,100% 0%,calc(100% - 4px) 100%,0% 100%);font-weight:700;}
-.lang-btn[onclick*="uk"]{background:rgba(255,215,0,.12);color:#ffd700;border:1px solid rgba(255,215,0,.3);}
-.lang-btn[onclick*="uk"].active,.lang-btn[onclick*="uk"]:hover{background:linear-gradient(135deg,#3b82f6,#ffd700);color:#000;box-shadow:0 0 18px rgba(255,215,0,.4);}
-.lang-btn[onclick*="ru"]{background:rgba(200,0,11,.12);color:var(--r3);border:1px solid rgba(200,0,11,.3);}
-.lang-btn[onclick*="ru"].active,.lang-btn[onclick*="ru"]:hover{background:linear-gradient(135deg,var(--r),#fff,var(--r));color:#000;box-shadow:0 0 18px rgba(200,0,11,.5);}
-.lang-btn[onclick*="en"]{background:rgba(0,100,255,.12);color:#60a5fa;border:1px solid rgba(0,100,255,.3);}
-.lang-btn[onclick*="en"].active,.lang-btn[onclick*="en"]:hover{background:linear-gradient(135deg,#1e3a8a,#cc0000,#1e3a8a);color:#fff;box-shadow:0 0 18px rgba(0,100,200,.4);}
+/* ══════════════════ HERO ══════════════════ */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 64px 80px;position:relative;overflow:hidden;}
 
-.ncta{font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:3px;text-transform:uppercase;padding:10px 22px;border:1px solid rgba(200,0,11,.42);color:var(--r3);text-decoration:none;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all .25s;}
-.ncta:hover{background:var(--r);color:var(--bg);border-color:var(--r);box-shadow:0 0 32px rgba(200,0,11,.45);}
+/* Animated gradient mesh */
+.hero-mesh{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.mesh-blob{position:absolute;border-radius:50%;filter:blur(120px);animation:blobFloat ease-in-out infinite;}
+.mb1{width:600px;height:600px;background:rgba(230,0,0,.08);top:-100px;right:-100px;animation-duration:12s;animation-delay:0s;}
+.mb2{width:400px;height:400px;background:rgba(230,0,0,.05);bottom:-50px;left:-50px;animation-duration:15s;animation-delay:-5s;}
+.mb3{width:300px;height:300px;background:rgba(180,0,0,.06);top:50%;left:50%;animation-duration:18s;animation-delay:-9s;}
+@keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(30px,-20px) scale(1.05);}66%{transform:translate(-20px,30px) scale(.95);}}
 
-/* HERO */
-#hero{min-height:100vh;display:flex;align-items:center;padding:140px 80px 100px;position:relative;overflow:hidden;}
-.hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(200,0,11,.046) 1px,transparent 1px),linear-gradient(90deg,rgba(200,0,11,.046) 1px,transparent 1px);background-size:68px 68px;animation:gs 22s linear infinite;}
-@keyframes gs{from{background-position:0 0;}to{background-position:0 68px;}}
-.hglow{position:absolute;right:-300px;top:50%;transform:translateY(-50%);width:1100px;height:1100px;background:radial-gradient(ellipse at 55% 50%,rgba(200,0,11,.09) 0%,transparent 60%);animation:hbr 8s ease-in-out infinite;}
-@keyframes hbr{0%,100%{opacity:.5;transform:translateY(-50%) scale(1);}50%{opacity:1;transform:translateY(-50%) scale(1.09);}}
-.hglow2{position:absolute;left:-300px;bottom:-100px;width:700px;height:700px;background:radial-gradient(circle,rgba(200,0,11,.04) 0%,transparent 70%);}
-.hd1{position:absolute;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(200,0,11,.1) 30%,rgba(200,0,11,.1) 70%,transparent);right:30%;transform:rotate(5deg);}
-.hd2{position:absolute;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(200,0,11,.055) 30%,rgba(200,0,11,.055) 70%,transparent);right:26%;transform:rotate(5deg);}
-.hlr{position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent 5%,var(--r) 25%,var(--r) 75%,transparent 95%);opacity:.15;}
+/* Grid overlay */
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;}
+.hero-vline{position:absolute;top:0;bottom:0;right:42%;width:1px;background:linear-gradient(180deg,transparent 0%,var(--bdr-r) 20%,var(--bdr-r) 80%,transparent);pointer-events:none;}
 
-/* Floating particles */
-.particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
-.particle{position:absolute;width:2px;height:2px;background:var(--r);border-radius:50%;box-shadow:0 0 4px var(--r);animation:pfloat linear infinite;opacity:0;}
-@keyframes pfloat{0%{transform:translateY(100vh) translateX(0);opacity:0;}10%{opacity:.6;}90%{opacity:.3;}100%{transform:translateY(-10vh) translateX(var(--dx,20px));opacity:0;}}
+.hero-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+.hero-badge{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:2px;color:var(--r3);text-transform:uppercase;padding:5px 14px;border:1px solid rgba(230,0,0,.25);border-radius:999px;background:rgba(230,0,0,.06);display:inline-flex;align-items:center;gap:7px;}
+.badge-pulse{width:5px;height:5px;background:var(--r2);border-radius:50%;box-shadow:0 0 6px var(--r);animation:logoPulse 2s infinite;}
 
-.hcont{position:relative;z-index:2;}
-.h-online{display:inline-flex;align-items:center;gap:10px;margin-bottom:30px;font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:5px;color:var(--green);text-transform:uppercase;}
-.hdot{width:6px;height:6px;background:var(--green);border-radius:50%;box-shadow:0 0 8px var(--green);animation:dp 2.2s ease-in-out infinite;}
-@keyframes dp{0%,100%{box-shadow:0 0 6px var(--green);}50%{box-shadow:0 0 20px var(--green),0 0 40px rgba(0,230,118,.3);}}
+.hero-title{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:clamp(3.5rem,8vw,8.5rem);line-height:.88;letter-spacing:-4px;color:var(--w);margin-bottom:10px;position:relative;z-index:2;}
+.hero-title .line2{color:var(--r);display:block;position:relative;}
+.hero-title .line3{-webkit-text-stroke:1.5px rgba(255,255,255,.18);color:transparent;display:block;}
 
-.brand{line-height:.86;margin-bottom:18px;}
-.bnova{font-family:'Bebas Neue',sans-serif;font-size:clamp(6rem,16vw,15rem);letter-spacing:-2px;color:var(--w);display:block;text-shadow:0 0 100px rgba(200,0,11,.1);animation:ng 13s infinite;}
-@keyframes ng{0%,92%,100%{text-shadow:0 0 100px rgba(200,0,11,.1);transform:none;}93%{text-shadow:-7px 0 var(--r2),7px 0 #ffbbbb;transform:skewX(-1deg);clip-path:inset(5% 0 72% 0);}94%{text-shadow:7px 0 #6b0006,-7px 0 var(--r);clip-path:inset(65% 0 5% 0);transform:skewX(.8deg);}95%{text-shadow:0 0 100px rgba(200,0,11,.1);transform:none;clip-path:none;}}
-.bcore{font-family:'Bebas Neue',sans-serif;font-size:clamp(6rem,16vw,15rem);letter-spacing:-2px;color:var(--r);display:block;text-shadow:0 0 70px var(--rg),0 0 140px rgba(200,0,11,.15);}
+/* Animated underline on line2 */
+.hero-title .line2::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:3px;background:linear-gradient(90deg,var(--r),var(--r3));border-radius:2px;animation:underlineGrow 1s 1.2s cubic-bezier(.16,1,.3,1) forwards;box-shadow:0 0 12px var(--r);}
+@keyframes underlineGrow{to{width:100%}}
 
-.htagline{font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:9px;text-transform:uppercase;color:var(--m2);margin-bottom:38px;display:flex;align-items:center;gap:18px;}
-.htagline::before{content:'';width:32px;height:1px;background:var(--r);box-shadow:0 0 6px var(--r);flex-shrink:0;}
-.hdesc{font-size:1.12rem;font-weight:300;line-height:1.95;max-width:540px;margin-bottom:56px;}
-.hdesc strong{color:var(--r4);font-weight:600;}
-.hdesc em{color:var(--w);font-style:normal;}
-.hbtns{display:flex;gap:14px;flex-wrap:wrap;}
-.hb1,.hb2{font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:4px;text-transform:uppercase;padding:16px 44px;text-decoration:none;clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);transition:all .3s;display:inline-block;}
-.hb1{background:var(--r);color:var(--bg);box-shadow:0 0 40px rgba(200,0,11,.45);}
-.hb1:hover{background:var(--r2);transform:translateY(-3px);box-shadow:0 10px 70px rgba(200,0,11,.65);}
-.hb2{border:1px solid rgba(200,0,11,.4);color:var(--r3);}
-.hb2:hover{background:rgba(200,0,11,.09);transform:translateY(-3px);}
-.hnums{position:absolute;right:80px;bottom:80px;display:flex;gap:56px;align-items:flex-end;}
-.hni{text-align:center;}
-.hnv{font-family:'Bebas Neue',sans-serif;font-size:4.2rem;color:var(--r);text-shadow:0 0 28px var(--rg);display:block;line-height:1;letter-spacing:2px;}
-.hnl{font-family:'Share Tech Mono',monospace;font-size:.56rem;letter-spacing:3px;color:var(--m2);text-transform:uppercase;margin-top:5px;}
-.hdiv{width:1px;height:56px;background:linear-gradient(180deg,transparent,rgba(200,0,11,.18),transparent);align-self:center;}
-.scrl{position:absolute;left:80px;bottom:34px;display:flex;align-items:center;gap:12px;font-family:'Share Tech Mono',monospace;font-size:.55rem;letter-spacing:5px;color:var(--m);text-transform:uppercase;animation:sb 2.5s ease-in-out infinite;}
-.scrl::before{content:'';width:1px;height:46px;background:linear-gradient(180deg,transparent,var(--r));display:block;}
-@keyframes sb{0%,100%{transform:translateY(0);opacity:.35;}50%{transform:translateY(8px);opacity:.8;}}
+.hero-sub{font-size:1.1rem;color:var(--g2);line-height:1.85;max-width:520px;margin-bottom:44px;font-weight:300;position:relative;z-index:2;}
+.hero-sub strong{color:var(--w);font-weight:500;}
 
-/* SECTIONS */
-.sec{padding:130px 80px;position:relative;}
-.sec-alt{background:var(--bg2);border-top:1px solid rgba(200,0,11,.06);border-bottom:1px solid rgba(200,0,11,.06);}
-.sec-dark{background:var(--bg3);}
-.shead{margin-bottom:80px;}
-.sey{font-family:'Share Tech Mono',monospace;font-size:.57rem;letter-spacing:7px;color:var(--r);text-transform:uppercase;opacity:.5;margin-bottom:10px;display:block;}
-.sh{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,5vw,5.2rem);letter-spacing:5px;color:var(--w);line-height:1;display:inline-block;position:relative;}
-.sh::after{content:'';position:absolute;bottom:-12px;left:0;width:52px;height:3px;background:var(--r);box-shadow:0 0 14px var(--r);}
-.ssub{font-size:1.02rem;font-weight:300;color:var(--m2);line-height:1.8;max-width:520px;margin-top:30px;opacity:.85;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;position:relative;z-index:2;}
+.btn-primary{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:1px;text-transform:uppercase;padding:16px 38px;background:var(--r);color:#fff;text-decoration:none;border-radius:8px;transition:all .25s;border:1px solid var(--r);display:inline-flex;align-items:center;gap:8px;}
+.btn-primary:hover{background:var(--r2);box-shadow:0 8px 40px var(--glow),0 4px 20px rgba(0,0,0,.4);transform:translateY(-3px);}
+.btn-primary .arr{transition:transform .2s;}
+.btn-primary:hover .arr{transform:translateX(4px);}
+.btn-ghost{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:1px;text-transform:uppercase;padding:16px 38px;border:1px solid var(--bdr);color:var(--g2);text-decoration:none;border-radius:8px;transition:all .25s;}
+.btn-ghost:hover{border-color:rgba(255,255,255,.18);color:var(--w);transform:translateY(-3px);}
 
-/* ABOUT */
-.agrid{display:grid;grid-template-columns:1.1fr .9fr;gap:110px;align-items:start;}
-.alead{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,2.8vw,2.6rem);letter-spacing:2px;color:var(--r4);line-height:1.18;margin-bottom:28px;}
-.ap{font-size:1.06rem;line-height:1.92;opacity:.77;margin-bottom:16px;}
-.ap strong{color:var(--r4);font-weight:600;}
-.ap em{color:var(--w);font-style:normal;}
-.manifesto{margin-top:34px;padding:26px 30px;background:rgba(200,0,11,.035);border-left:2px solid var(--r);position:relative;}
-.manifesto::before{content:'// MANIFESTO';position:absolute;top:-10px;left:16px;font-family:'Share Tech Mono',monospace;font-size:.56rem;letter-spacing:4px;color:var(--r);background:var(--bg2);padding:0 8px;opacity:.65;}
-.manifesto p{font-family:'Share Tech Mono',monospace;font-size:.8rem;line-height:1.95;color:var(--m2);letter-spacing:.5px;}
-.manifesto p strong{color:var(--r3);}
-.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:30px;}
-.chip{font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(200,0,11,.18);color:var(--r3);background:rgba(200,0,11,.04);clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);transition:all .26s;}
-.chip:hover{border-color:var(--r);background:rgba(200,0,11,.11);box-shadow:0 0 12px rgba(200,0,11,.16);}
-.bars-wrap{display:flex;flex-direction:column;gap:26px;}
-.blabel{font-family:'Share Tech Mono',monospace;font-size:.64rem;letter-spacing:3px;text-transform:uppercase;display:flex;justify-content:space-between;margin-bottom:8px;}
-.blabel span{color:var(--r);}
-.btrack{height:2px;background:rgba(255,255,255,.04);}
-.bfill{height:100%;background:linear-gradient(90deg,#5a0006,var(--r),var(--r3));box-shadow:0 0 8px var(--r);transform:scaleX(0);transform-origin:left;transition:transform 1.6s cubic-bezier(.16,1,.3,1);position:relative;}
-.bfill.go{transform:scaleX(1);}
-.bfill::after{content:'';position:absolute;right:-5px;top:-5px;width:11px;height:11px;background:var(--r3);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);box-shadow:0 0 9px var(--r);}
+/* Hero stats — bottom right */
+.hero-stats{position:absolute;bottom:80px;right:64px;display:flex;gap:0;z-index:2;}
+.hstat{padding:20px 32px;border:1px solid var(--bdr);background:rgba(255,255,255,.02);position:relative;transition:border-color .3s,background .3s;cursor:default;}
+.hstat:first-child{border-radius:8px 0 0 8px;}
+.hstat:last-child{border-radius:0 8px 8px 0;}
+.hstat+.hstat{border-left:none;}
+.hstat:hover{border-color:var(--bdr-r);background:rgba(230,0,0,.04);}
+.hstat-v{font-family:'Cabinet Grotesk',sans-serif;font-size:2.4rem;font-weight:900;color:var(--r);line-height:1;letter-spacing:-2px;margin-bottom:4px;}
+.hstat-l{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:1px;color:var(--g1);text-transform:uppercase;}
 
-/* SERVICES */
-.svc-cats{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;background:rgba(200,0,11,.06);}
-.svc-cat{background:var(--bg2);padding:48px 46px;position:relative;overflow:hidden;transition:all .4s;}
-.svc-cat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--r),transparent);transform:scaleX(0);transform-origin:left;transition:transform .5s;}
-.svc-cat::after{content:'';position:absolute;bottom:0;right:0;width:32px;height:32px;border-bottom:1px solid rgba(200,0,11,.18);border-right:1px solid rgba(200,0,11,.18);transition:all .4s;}
-.svc-cat:hover{background:var(--bg3);}
-.svc-cat:hover::before{transform:scaleX(1);}
-.svc-cat:hover::after{width:52px;height:52px;border-color:rgba(200,0,11,.45);}
-.cat-num{font-family:'Bebas Neue',sans-serif;font-size:5rem;color:rgba(200,0,11,.05);position:absolute;top:10px;right:24px;line-height:1;pointer-events:none;}
-.cat-icon{font-size:2.2rem;margin-bottom:20px;display:block;filter:drop-shadow(0 0 12px rgba(200,0,11,.35));}
-.cat-title{font-family:'Bebas Neue',sans-serif;font-size:1.85rem;letter-spacing:4px;color:var(--w);margin-bottom:12px;}
-.cat-desc{font-size:1rem;color:var(--m2);line-height:1.78;margin-bottom:26px;max-width:480px;}
-.svc-list{display:flex;flex-wrap:wrap;gap:8px;}
-.svc-item{font-family:'Share Tech Mono',monospace;font-size:.63rem;letter-spacing:2px;padding:7px 14px;border:1px solid rgba(200,0,11,.15);color:var(--m3);background:rgba(200,0,11,.03);clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);transition:all .26s;}
-.svc-item:hover{color:var(--r3);border-color:rgba(200,0,11,.35);background:rgba(200,0,11,.08);}
+/* Scroll hint */
+.scroll-hint{position:absolute;bottom:32px;left:64px;display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:2px;color:var(--g1);text-transform:uppercase;animation:hintBob 2.5s ease-in-out infinite;}
+@keyframes hintBob{0%,100%{transform:translateY(0);opacity:.4;}50%{transform:translateY(6px);opacity:.8;}}
+.scroll-line{width:1px;height:40px;background:linear-gradient(180deg,transparent,var(--r));display:block;}
 
-/* PRICING */
-#pricing{background:var(--bg3);}
-.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(200,0,11,.06);margin-bottom:60px;}
-.pricec{background:var(--bg2);padding:44px 36px;position:relative;overflow:hidden;transition:all .4s;}
-.pricec.featured{background:var(--bg3);border-top:2px solid var(--r);}
-.pricec:hover{background:var(--bg4);transform:translateY(-6px);box-shadow:0 24px 70px rgba(0,0,0,.55),0 0 40px rgba(200,0,11,.1);}
-.featured-badge{position:absolute;top:16px;right:16px;font-family:'Share Tech Mono',monospace;font-size:.55rem;letter-spacing:3px;padding:4px 12px;background:var(--r);color:var(--bg);text-transform:uppercase;}
-.plan-ico{font-size:2rem;margin-bottom:18px;display:block;}
-.plan-name{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:4px;color:var(--w);margin-bottom:8px;}
-.plan-desc{font-size:.88rem;color:var(--m2);line-height:1.65;margin-bottom:24px;}
-.plan-price{margin-bottom:28px;}
-.plan-price .amt{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;color:var(--r);text-shadow:0 0 20px var(--rg);letter-spacing:2px;}
-.plan-price .cur{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--m2);letter-spacing:3px;margin-left:6px;}
-.plan-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:30px;}
-.plan-features li{font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:1px;color:var(--m2);display:flex;align-items:center;gap:10px;}
-.plan-features li::before{content:'▸';color:var(--r);flex-shrink:0;}
-.plan-btn{font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:3px;text-transform:uppercase;padding:12px 28px;border:1px solid rgba(200,0,11,.4);color:var(--r3);text-decoration:none;display:inline-block;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all .28s;cursor:pointer;background:transparent;}
-.plan-btn:hover,.pricec.featured .plan-btn{background:var(--r);color:var(--bg);border-color:var(--r);box-shadow:0 0 28px rgba(200,0,11,.4);}
+/* ══════════════════ SECTIONS ══════════════════ */
+.sec{padding:110px 64px;position:relative;}
+.sec-alt{background:var(--s1);}
+.sec-top{border-top:1px solid var(--bdr);}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:3px;color:var(--r);text-transform:uppercase;margin-bottom:14px;opacity:.7;}
+.sec-title{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:clamp(2.2rem,4vw,4rem);letter-spacing:-2px;color:var(--w);line-height:.92;margin-bottom:16px;}
+.sec-sub{font-size:.98rem;color:var(--g1);line-height:1.8;max-width:480px;font-weight:300;}
+.sec-head{margin-bottom:64px;}
 
-/* CRYPTO */
-.crypto-wrap{padding:40px;background:rgba(200,0,11,.03);border:1px solid rgba(200,0,11,.12);position:relative;}
-.crypto-wrap::before{content:'// ПРИЙМАЄМО ОПЛАТУ';position:absolute;top:-11px;left:20px;font-family:'Share Tech Mono',monospace;font-size:.56rem;letter-spacing:4px;color:var(--r);background:var(--bg3);padding:0 10px;opacity:.65;}
-.crypto-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:4px;color:var(--w);margin-bottom:20px;}
-.crypto-list{display:flex;flex-wrap:wrap;gap:12px;}
-.ctag{font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:2px;padding:10px 20px;border:1px solid rgba(200,0,11,.2);color:var(--r3);background:rgba(200,0,11,.04);clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);transition:all .26s;display:flex;align-items:center;gap:8px;}
-.ctag:hover{border-color:var(--r);background:rgba(200,0,11,.1);box-shadow:0 0 14px rgba(200,0,11,.18);}
-.ctag-ico{font-size:1.1rem;}
+/* ══════════════════ SERVICES ══════════════════ */
+.svc-rows{border-top:1px solid var(--bdr);}
+.svc-r{display:grid;grid-template-columns:60px 1fr auto;align-items:center;gap:36px;padding:22px 0;border-bottom:1px solid var(--bdr);cursor:default;position:relative;overflow:hidden;transition:padding-left .25s;}
+.svc-r::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(230,0,0,.04),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.svc-r:hover::before{transform:scaleX(1);}
+.svc-r:hover{padding-left:12px;}
+.svc-r:hover .svc-n{color:var(--r);}
+.svc-r:hover .svc-name{color:var(--w);}
+.svc-r:hover .svc-arr{opacity:1;transform:none;}
+.svc-n{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--g1);letter-spacing:1px;transition:color .25s;}
+.svc-mid{display:flex;flex-direction:column;gap:7px;}
+.svc-name{font-family:'Cabinet Grotesk',sans-serif;font-size:1.2rem;font-weight:700;color:var(--g3);letter-spacing:-.5px;transition:color .25s;}
+.svc-chips{display:flex;flex-wrap:wrap;gap:5px;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:.58rem;padding:3px 9px;border:1px solid var(--bdr);color:var(--g1);border-radius:4px;letter-spacing:.3px;}
+.svc-arr{color:var(--r);opacity:0;transform:translateX(-8px);transition:all .25s;font-size:1.1rem;}
 
-/* TEACHING */
-.teach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:40px;}
-.tcourse{background:var(--bg2);border:1px solid rgba(200,0,11,.11);padding:36px 28px;position:relative;overflow:hidden;transition:all .4s;}
-.tcourse::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--r),transparent);transform:scaleX(0);transform-origin:center;transition:transform .5s;}
-.tcourse:hover{border-color:rgba(200,0,11,.3);background:var(--bg4);transform:translateY(-7px);box-shadow:0 28px 80px rgba(0,0,0,.55),0 0 44px rgba(200,0,11,.08);}
-.tcourse:hover::before{transform:scaleX(1);}
-.tc-ico{font-size:2rem;margin-bottom:18px;display:block;filter:drop-shadow(0 0 10px rgba(200,0,11,.3));}
-.tc-level{font-family:'Share Tech Mono',monospace;font-size:.58rem;letter-spacing:4px;color:var(--r);text-transform:uppercase;margin-bottom:10px;opacity:.7;}
-.tc-title{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:3px;color:var(--w);margin-bottom:12px;}
-.tc-desc{font-size:.9rem;color:var(--m2);line-height:1.72;margin-bottom:20px;}
-.tc-price{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--r);letter-spacing:2px;text-shadow:0 0 16px var(--rg);margin-bottom:14px;}
-.tc-tags{display:flex;flex-wrap:wrap;gap:7px;}
-.tc-tag{font-family:'Share Tech Mono',monospace;font-size:.58rem;padding:4px 10px;border:1px solid rgba(200,0,11,.14);color:var(--r3);letter-spacing:1px;background:rgba(200,0,11,.03);}
+/* ══════════════════ PRICING ══════════════════ */
+.price-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bdr);}
+.pc{background:var(--bg);padding:42px 36px;position:relative;transition:background .3s;overflow:hidden;}
+.pc::after{content:'';position:absolute;top:0;left:0;right:0;height:0;background:var(--r);transition:height .3s;box-shadow:0 0 20px var(--glow);}
+.pc:hover::after,.pc.feat::after{height:2px;}
+.pc:hover{background:var(--s1);}
+.pc.feat{background:var(--s1);border-top:2px solid var(--r);}
+.pc.feat::after{display:none;}
+.pc-tag{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:2px;padding:3px 10px;background:var(--r);color:#fff;display:inline-block;margin-bottom:16px;border-radius:4px;text-transform:uppercase;}
+.pc-name{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:1.5rem;color:var(--w);letter-spacing:-1px;margin-bottom:6px;}
+.pc-desc{font-size:.88rem;color:var(--g1);line-height:1.65;margin-bottom:24px;}
+.pc-price{margin-bottom:28px;}
+.pc-price .amt{font-family:'Cabinet Grotesk',sans-serif;font-size:3.2rem;font-weight:900;color:var(--r);letter-spacing:-2px;line-height:1;}
+.pc-price .range{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--g1);margin-left:4px;}
+.pc-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:32px;}
+.pc-list li{font-size:.9rem;color:var(--g2);display:flex;align-items:flex-start;gap:10px;line-height:1.5;}
+.pc-list li::before{content:'→';color:var(--r);flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:.78rem;margin-top:1px;}
+.pc-btn{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:1px;text-transform:uppercase;padding:13px;border:1px solid var(--bdr);color:var(--g2);background:transparent;cursor:pointer;width:100%;border-radius:6px;transition:all .25s;text-decoration:none;display:block;text-align:center;}
+.pc-btn:hover,.pc.feat .pc-btn{background:var(--r);color:#fff;border-color:var(--r);box-shadow:0 4px 24px var(--glow);}
 
-/* TEAM */
-.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
-.tcard{background:var(--bg2);border:1px solid rgba(200,0,11,.1);padding:40px 30px 34px;position:relative;overflow:hidden;transition:all .4s;}
-.tcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--r),transparent);transform:scaleX(0);transform-origin:center;transition:transform .5s;}
-.tcard::after{content:'';position:absolute;bottom:0;right:0;width:30px;height:30px;border-bottom:1px solid rgba(200,0,11,.18);border-right:1px solid rgba(200,0,11,.18);transition:all .4s;}
-.tcard:hover{border-color:rgba(200,0,11,.32);background:var(--bg3);transform:translateY(-8px);box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 44px rgba(200,0,11,.09);}
-.tcard:hover::before{transform:scaleX(1);}
-.tcard:hover::after{width:50px;height:50px;border-color:rgba(200,0,11,.44);}
-.tnum{position:absolute;top:16px;right:20px;font-family:'Bebas Neue',sans-serif;font-size:6rem;color:rgba(200,0,11,.04);line-height:1;pointer-events:none;}
-.tav{width:72px;height:72px;margin-bottom:22px;background:linear-gradient(135deg,#120303,#2c0707);border:1px solid rgba(200,0,11,.24);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;color:var(--r3);clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);text-shadow:0 0 14px var(--rg);transition:box-shadow .4s;}
-.tcard:hover .tav{box-shadow:0 0 28px rgba(200,0,11,.22);}
-.tname{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:4px;color:var(--w);margin-bottom:4px;}
-.trole{font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:3px;color:var(--r);text-transform:uppercase;margin-bottom:16px;opacity:.7;}
-.tdesc{font-size:.92rem;color:var(--m2);line-height:1.7;margin-bottom:20px;}
-.ttags{display:flex;flex-wrap:wrap;gap:7px;}
-.ttag{font-family:'Share Tech Mono',monospace;font-size:.58rem;padding:4px 10px;border:1px solid rgba(200,0,11,.14);color:var(--r3);letter-spacing:1px;background:rgba(200,0,11,.03);}
-.tcard-empty{border-style:dashed;opacity:.28;pointer-events:none;}
+/* Crypto */
+.crypto-strip{margin-top:48px;padding:24px 32px;border:1px solid var(--bdr);border-radius:8px;display:flex;align-items:center;gap:32px;flex-wrap:wrap;background:var(--s1);}
+.crypto-label{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:2px;color:var(--g1);text-transform:uppercase;white-space:nowrap;}
+.crypto-coins{display:flex;flex-wrap:wrap;gap:8px;}
+.coin{font-family:'JetBrains Mono',monospace;font-size:.68rem;padding:7px 14px;border:1px solid var(--bdr);color:var(--g2);border-radius:6px;display:flex;align-items:center;gap:6px;transition:all .2s;cursor:default;}
+.coin:hover{border-color:var(--bdr-r);color:var(--w);}
 
-/* CONTACT FORM */
-#contact{text-align:center;position:relative;overflow:hidden;}
-.cbg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(200,0,11,.07) 0%,transparent 55%);pointer-events:none;}
-.cbig{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,8vw,8rem);letter-spacing:3px;color:var(--w);line-height:.88;margin-bottom:14px;position:relative;z-index:1;}
-.cbig em{color:var(--r);font-style:normal;text-shadow:0 0 60px var(--rg);}
-.csub{font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:6px;color:var(--m2);margin-bottom:60px;position:relative;z-index:1;}
+/* ══════════════════ PORTFOLIO ══════════════════ */
+.port-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.pcard{background:var(--s1);border:1px solid var(--bdr);border-radius:12px;overflow:hidden;transition:all .35s;position:relative;}
+.pcard:hover{border-color:var(--bdr-r);transform:translateY(-8px);box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 60px rgba(230,0,0,.08);}
+.pcard-top{height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.pcard-top-bg{position:absolute;inset:0;transition:opacity .4s;}
+.pcard:hover .pcard-top-bg{opacity:1.5;}
+.pcard-top::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:20px 20px;}
+.pcard-ico{font-size:2.8rem;position:relative;z-index:1;transition:transform .35s;}
+.pcard:hover .pcard-ico{transform:scale(1.15) rotate(-5deg);}
+.pcard-status{position:absolute;top:14px;right:14px;font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:1px;padding:4px 10px;border-radius:999px;}
+.st-live{background:rgba(0,200,80,.08);border:1px solid rgba(0,200,80,.2);color:#4dff88;}
+.st-wip{background:rgba(255,160,0,.08);border:1px solid rgba(255,160,0,.2);color:#ffaa00;}
+.pcard-body{padding:24px 28px;}
+.pcard-num{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--r);letter-spacing:3px;opacity:.45;margin-bottom:8px;}
+.pcard-title{font-family:'Cabinet Grotesk',sans-serif;font-size:1.3rem;font-weight:800;color:var(--w);letter-spacing:-.5px;margin-bottom:8px;}
+.pcard-desc{font-size:.88rem;color:var(--g1);line-height:1.7;margin-bottom:16px;}
+.pcard-stack{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px;}
+.pcard-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;padding:3px 8px;border:1px solid var(--bdr);color:var(--g1);border-radius:4px;}
+.pcard-link{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.5px;color:var(--r3);text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:gap .2s,color .2s;}
+.pcard-link:hover{gap:9px;color:var(--r2);}
+
+/* ══════════════════ ACADEMY ══════════════════ */
+.academy-header{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-bottom:56px;align-items:center;}
+.academy-big{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:clamp(2rem,3.5vw,3.2rem);color:var(--w);line-height:.95;letter-spacing:-2px;}
+.academy-big span{color:var(--r);}
+.academy-right p{font-size:.96rem;color:var(--g1);line-height:1.85;font-weight:300;margin-bottom:14px;}
+.academy-right strong{color:var(--g3);font-weight:500;}
+
+.courses{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.course{background:var(--s1);border:1px solid var(--bdr);border-radius:10px;padding:28px 24px;transition:all .3s;position:relative;overflow:hidden;}
+.course::before{content:'';position:absolute;bottom:0;left:0;right:0;height:0;background:var(--r);transition:height .35s;box-shadow:0 0 16px var(--glow);}
+.course:hover{border-color:var(--bdr-r);transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.course:hover::before{height:2px;}
+.c-ico{font-size:1.8rem;margin-bottom:14px;}
+.c-lv{font-family:'JetBrains Mono',monospace;font-size:.57rem;letter-spacing:2px;color:var(--r);text-transform:uppercase;margin-bottom:8px;opacity:.6;}
+.c-name{font-family:'Cabinet Grotesk',sans-serif;font-size:1.08rem;font-weight:800;color:var(--w);letter-spacing:-.5px;margin-bottom:8px;}
+.c-desc{font-size:.87rem;color:var(--g1);line-height:1.65;margin-bottom:14px;}
+.c-price{font-family:'Cabinet Grotesk',sans-serif;font-size:1.35rem;font-weight:900;color:var(--r);letter-spacing:-1px;}
+.c-price span{font-size:.68rem;color:var(--g1);font-family:'JetBrains Mono',monospace;font-weight:400;letter-spacing:.5px;}
+.c-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px;}
+.c-tag{font-family:'JetBrains Mono',monospace;font-size:.56rem;padding:2px 8px;border:1px solid var(--bdr);color:var(--g1);border-radius:4px;}
+
+/* ══════════════════ TEAM ══════════════════ */
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.tcard{background:var(--s1);border:1px solid var(--bdr);border-radius:12px;padding:36px 28px;transition:all .3s;position:relative;overflow:hidden;}
+.tcard:hover{border-color:var(--bdr-r);transform:translateY(-6px);box-shadow:0 24px 64px rgba(0,0,0,.5),0 0 40px rgba(230,0,0,.06);}
+.tcard-n{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:5rem;color:rgba(230,0,0,.04);position:absolute;top:12px;right:16px;line-height:1;letter-spacing:-3px;}
+.tcard-av{width:56px;height:56px;background:linear-gradient(135deg,#1a0000,#330505);border:1px solid var(--bdr-r);display:flex;align-items:center;justify-content:center;font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:1rem;color:var(--r3);margin-bottom:18px;border-radius:10px;}
+.tcard-name{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:1.4rem;color:var(--w);letter-spacing:-1px;margin-bottom:4px;}
+.tcard-role{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:1px;color:var(--r);text-transform:uppercase;margin-bottom:14px;opacity:.65;}
+.tcard-desc{font-size:.88rem;color:var(--g1);line-height:1.7;}
+.tcard-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:16px;}
+.tcard-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;padding:3px 8px;border:1px solid var(--bdr);color:var(--g1);border-radius:4px;}
+.tcard-empty{opacity:.18;pointer-events:none;}
+
+/* ══════════════════ REVIEWS ══════════════════ */
+.rev-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.rcard{background:var(--s1);border:1px solid var(--bdr);border-radius:12px;padding:36px 32px;transition:all .3s;}
+.rcard:hover{border-color:var(--bdr-r);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.45);}
+.rcard-stars{color:#ffd700;font-size:.9rem;letter-spacing:3px;margin-bottom:16px;}
+.rcard-text{font-size:.96rem;color:var(--g2);line-height:1.82;margin-bottom:22px;font-style:italic;font-weight:300;}
+.rcard-text::before{content:'"';font-family:'Cabinet Grotesk',sans-serif;font-size:3.5rem;color:rgba(230,0,0,.12);display:block;line-height:.5;margin-bottom:12px;}
+.rcard-auth{display:flex;align-items:center;gap:12px;}
+.rcard-av{width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,#1a0000,#330505);border:1px solid var(--bdr-r);display:flex;align-items:center;justify-content:center;font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:.78rem;color:var(--r3);flex-shrink:0;}
+.rcard-name{font-family:'Cabinet Grotesk',sans-serif;font-weight:700;color:var(--w);font-size:.92rem;}
+.rcard-role{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--g1);letter-spacing:.5px;margin-top:2px;}
+.rcard-link{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--r3);text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-top:14px;transition:gap .2s;}
+.rcard-link:hover{gap:8px;}
+
+/* ══════════════════ CONTACT ══════════════════ */
+#contact .inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+.ct-left .big{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:clamp(2.5rem,4.5vw,4.5rem);letter-spacing:-3px;color:var(--w);line-height:.88;margin-bottom:20px;}
+.ct-left .big span{color:var(--r);}
+.ct-left .sub{font-size:.96rem;color:var(--g1);line-height:1.8;margin-bottom:32px;font-weight:300;}
+.ct-links{display:flex;flex-direction:column;gap:10px;}
+.ct-link{display:flex;align-items:center;gap:14px;text-decoration:none;padding:14px 18px;border:1px solid var(--bdr);border-radius:8px;transition:all .25s;}
+.ct-link:hover{border-color:var(--bdr-r);background:rgba(230,0,0,.03);}
+.ct-link-ico{font-size:1.1rem;opacity:.6;}
+.ct-link-lbl{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:1px;color:var(--g1);text-transform:uppercase;margin-bottom:2px;}
+.ct-link-val{font-family:'Cabinet Grotesk',sans-serif;font-weight:700;color:var(--w);font-size:.92rem;}
 
 /* FORM */
-.form-wrap{max-width:680px;margin:0 auto 80px;text-align:left;position:relative;z-index:1;}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
-.finput,.fselect,.ftextarea{
-  width:100%;
-  font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:2px;
-  padding:16px 20px;
-  background:rgba(200,0,11,.04);
-  border:1px solid rgba(200,0,11,.18);
-  color:var(--w);
-  outline:none;transition:all .28s;
-  clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
-}
-.finput::placeholder,.ftextarea::placeholder{color:var(--m2);opacity:.7;}
-.fselect option{background:var(--bg3);color:var(--w);}
-.finput:focus,.fselect:focus,.ftextarea:focus{border-color:var(--r);background:rgba(200,0,11,.08);box-shadow:0 0 20px rgba(200,0,11,.12);}
-.ftextarea{resize:vertical;min-height:130px;margin-bottom:16px;display:block;}
-.frow{margin-bottom:16px;}
-.fsubmit{
-  font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:4px;text-transform:uppercase;
-  padding:17px 52px;background:var(--r);color:var(--bg);border:none;
-  clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
-  cursor:pointer;transition:all .3s;box-shadow:0 0 40px rgba(200,0,11,.45);
-  width:100%;
-}
-.fsubmit:hover{background:var(--r2);box-shadow:0 6px 60px rgba(200,0,11,.65);transform:translateY(-2px);}
-.form-success{display:none;text-align:center;padding:32px;border:1px solid rgba(0,230,118,.25);background:rgba(0,230,118,.04);}
-.form-success .sico{font-size:2.5rem;display:block;margin-bottom:12px;}
-.form-success p{font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:3px;color:var(--green);}
+.f-input,.f-sel,.f-area{width:100%;font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.5px;padding:14px 18px;background:var(--s1);border:1px solid var(--bdr);color:var(--w);outline:none;transition:border-color .2s,box-shadow .2s;border-radius:8px;margin-bottom:12px;display:block;}
+.f-input::placeholder,.f-area::placeholder{color:var(--g1);}
+.f-input:focus,.f-sel:focus,.f-area:focus{border-color:var(--bdr-r);box-shadow:0 0 0 3px rgba(230,0,0,.08);}
+.f-sel option{background:var(--s2);}
+.f-area{min-height:120px;resize:vertical;}
+.f-submit{width:100%;font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:1px;text-transform:uppercase;padding:16px;background:var(--r);color:#fff;border:none;cursor:pointer;transition:all .25s;border-radius:8px;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.f-submit:hover{background:var(--r2);box-shadow:0 6px 36px var(--glow),0 4px 20px rgba(0,0,0,.4);transform:translateY(-2px);}
+.f-submit .arr{transition:transform .2s;}
+.f-submit:hover .arr{transform:translateX(4px);}
 
-/* CONTACT CARDS */
-.ccards{display:grid;grid-template-columns:repeat(2,auto);justify-content:center;gap:16px;margin-bottom:100px;position:relative;z-index:1;}
-.ccard{display:flex;align-items:center;gap:20px;padding:22px 36px;background:var(--bg2);border:1px solid rgba(200,0,11,.11);text-decoration:none;transition:all .35s;clip-path:polygon(14px 0%,100% 0%,calc(100% - 14px) 100%,0% 100%);position:relative;overflow:hidden;}
-.ccard::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--r),transparent);transform:scaleX(0);transform-origin:left;transition:transform .4s;}
-.ccard:hover{border-color:rgba(200,0,11,.36);transform:translateY(-5px);box-shadow:0 22px 68px rgba(0,0,0,.55),0 0 38px rgba(200,0,11,.11);}
-.ccard:hover::before{transform:scaleX(1);}
-.cico{font-size:1.7rem;line-height:1;position:relative;z-index:1;opacity:.8;}
-.cinfo{text-align:left;position:relative;z-index:1;}
-.clbl{font-family:'Share Tech Mono',monospace;font-size:.56rem;letter-spacing:3px;color:var(--r);text-transform:uppercase;opacity:.6;margin-bottom:3px;}
-.cval{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;color:var(--w);}
-
-/* WHY */
-.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:rgba(200,0,11,.06);}
-.wcard{background:var(--bg2);padding:40px 30px;transition:background .3s;}
-.wcard:hover{background:var(--bg3);}
-.wico{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--r);text-shadow:0 0 18px var(--rg);margin-bottom:16px;line-height:1;}
-.wtitle{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:3px;color:var(--w);margin-bottom:10px;}
-.wdesc{font-size:.87rem;color:var(--m2);line-height:1.72;}
-
-/* FOOTER */
-footer{border-top:1px solid rgba(200,0,11,.07);padding:32px 80px;display:flex;justify-content:space-between;align-items:center;font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--m2);letter-spacing:2px;}
-.flogo{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:6px;color:var(--w);}
-.flogo em{color:var(--r);font-style:normal;}
-.hl{color:var(--r);}
+/* ══════════════════ FOOTER ══════════════════ */
+footer{border-top:1px solid var(--bdr);padding:28px 64px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.f-logo{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:1.1rem;letter-spacing:-1px;color:var(--w);}
+.f-logo span{color:var(--r);}
+.f-mid,.f-right{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.5px;color:var(--g1);}
 
 /* REVEAL */
-.fi{opacity:0;transform:translateY(30px);transition:opacity .75s ease,transform .75s ease;}
-.fi.vis{opacity:1;transform:translateY(0);}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .75s cubic-bezier(.16,1,.3,1),transform .75s cubic-bezier(.16,1,.3,1);}
+.reveal.in{opacity:1;transform:none;}
 
 /* MOBILE */
 @media(max-width:1000px){
-  nav{padding:14px 22px;}
-  .nul{gap:14px;}
-  #hero,.sec{padding:90px 22px;}
-  .agrid{grid-template-columns:1fr;gap:50px;}
-  .tgrid,.teach-grid,.svc-cats,.price-grid{grid-template-columns:1fr;}
-  .why-grid{grid-template-columns:repeat(2,1fr);}
-  .hnums{right:22px;gap:24px;}
-  footer{flex-direction:column;gap:10px;text-align:center;padding:22px;}
-  .ccards,.form-grid{grid-template-columns:1fr;}
+  nav{padding:0 20px;}
+  .nav-links{display:none;}
+  #hero,.sec{padding:90px 20px 60px;}
+  .hero-stats{right:20px;bottom:60px;flex-wrap:wrap;}
+  .hstat{border-radius:6px!important;border:1px solid var(--bdr)!important;}
+  .price-cards,.port-grid,.courses,.team-grid,.rev-grid{grid-template-columns:1fr;}
+  #contact .inner,.academy-header{grid-template-columns:1fr;}
+  footer{padding:20px;flex-direction:column;text-align:center;}
+  .svc-r{grid-template-columns:44px 1fr;gap:16px;}
+  .svc-arr{display:none;}
+  .scroll-hint{display:none;}
 }
 </style>
 </head>
 <body>
 
-<!-- LOADER -->
-<div id="loader">
-  <div class="l-brand"><span>N</span><span>o</span><span>v</span><span>a</span><span>C</span><span>o</span><span>r</span><span>e</span></div>
-  <div class="l-bar"></div>
-  <div class="l-sub" id="lsub">Ініціалізація...</div>
+<div id="ldr">
+  <div class="ldr-logo"><span>N</span><span>o</span><span>v</span><span>a</span><span>C</span><span>o</span><span>r</span><span>e</span></div>
+  <div class="ldr-bar"><div class="ldr-bar-fill"></div></div>
 </div>
 
-<!-- CURSOR -->
-<div id="cx"></div>
-<div id="cy"></div>
+<div id="dot"></div><div id="ring"></div>
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="#hero" class="nlogo">
-    <div class="nmark"><div class="nmark-inner"></div></div>
-    <div class="nname">Nova<em>Core</em></div>
-  </a>
-  <ul class="nul">
-    <li><a href="#about" data-i18n="nav_about">Про нас</a></li>
-    <li><a href="#services" data-i18n="nav_services">Послуги</a></li>
-    <li><a href="#pricing" data-i18n="nav_pricing">Ціни</a></li>
-    <li><a href="#teaching" data-i18n="nav_teach">Навчання</a></li>
-    <li><a href="#team" data-i18n="nav_team">Команда</a></li>
-    <li><a href="#contact" data-i18n="nav_contact">Контакт</a></li>
+  <a href="#hero" class="logo"><div class="logo-dot"></div>NovaCore</a>
+  <div class="nav-links">
+    <a href="#services" data-i="n1">Services</a>
+    <a href="#pricing" data-i="n2">Pricing</a>
+    <a href="#portfolio" data-i="n3">Portfolio</a>
+    <a href="#academy" data-i="n4">Academy</a>
+    <a href="#team" data-i="n5">Team</a>
+    <a href="#contact" data-i="n6">Contact</a>
+  </div>
+  <div class="nav-r">
     <div class="lang-sw">
-      <button class="lang-btn" onclick="setLang('uk')">УКР</button>
-      <button class="lang-btn active" onclick="setLang('ru')">РУС</button>
-      <button class="lang-btn" onclick="setLang('en')">ENG</button>
+      <button class="lb en on" onclick="setL('en')">ENG</button>
+      <button class="lb ru" onclick="setL('ru')">РУС</button>
+      <button class="lb uk" onclick="setL('uk')">УКР</button>
     </div>
-  </ul>
-  <a href="#contact" class="ncta" data-i18n="nav_cta">Зв'язатись</a>
+    <a href="#contact" class="nav-cta" data-i="ncta">Get in touch</a>
+  </div>
 </nav>
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hgrid"></div>
-  <div class="hglow"></div><div class="hglow2"></div>
-  <div class="hd1"></div><div class="hd2"></div>
-  <div class="hlr"></div>
-  <div class="particles" id="particles"></div>
+  <div class="hero-mesh">
+    <div class="mesh-blob mb1"></div>
+    <div class="mesh-blob mb2"></div>
+    <div class="mesh-blob mb3"></div>
+  </div>
+  <div class="hero-grid"></div>
+  <div class="hero-vline"></div>
 
-  <div class="hcont">
-    <div class="h-online"><div class="hdot"></div><span data-i18n="hero_online">Відкриті для проектів та учнів</span></div>
-    <div class="brand">
-      <span class="bnova" id="tNova"></span>
-      <span class="bcore">Core</span>
-    </div>
-    <div class="htagline" data-i18n="hero_tag">IT Studio & Academy · Andrey & Artem</div>
-    <p class="hdesc" data-i18n="hero_desc">
-      Ми <em>розробляємо</em> digital-продукти та <strong>навчаємо IT</strong> з нуля.<br>
-      Реальний код. Живі проекти. Знання, які працюють —<br>
-      а не пилять на полиці після курсу.
-    </p>
-    <div class="hbtns">
-      <a href="#services" class="hb1" data-i18n="hero_btn1">Наші послуги</a>
-      <a href="#teaching" class="hb2" data-i18n="hero_btn2">Навчання IT</a>
-    </div>
+  <div class="hero-eyebrow">
+    <div class="hero-badge"><div class="badge-pulse"></div><span data-i="badge">Open for projects & students</span></div>
   </div>
-  <div class="hnums">
-    <div class="hni"><span class="hnv" data-count="2">0</span><div class="hnl" data-i18n="num_founders">засновники</div></div>
-    <div class="hdiv"></div>
-    <div class="hni"><span class="hnv" data-count="15">0</span><div class="hnl" data-i18n="num_age">років кожному</div></div>
-    <div class="hdiv"></div>
-    <div class="hni"><span class="hnv">∞</span><div class="hnl" data-i18n="num_ideas">можливостей</div></div>
-  </div>
-  <div class="scrl" data-i18n="scroll">Scroll to explore</div>
-</section>
 
-<!-- ABOUT -->
-<section id="about" class="sec sec-alt">
-  <div class="shead fi">
-    <span class="sey" data-i18n="about_sey">// 01 — ПРО СТУДІЮ</span>
-    <h2 class="sh">NovaCore</h2>
-    <p class="ssub" data-i18n="about_sub">Ми будуємо продукти та ростимо розробників — одночасно.</p>
+  <h1 class="hero-title">
+    <span class="d-block" data-i="h1a">We Build</span>
+    <span class="line2" data-i="h1b">Digital</span>
+    <span class="d-block line3" data-i="h1c">Products</span>
+  </h1>
+
+  <p class="hero-sub" data-i="hsub">IT studio & coding academy founded by two 15-year-olds. We write <strong>real code</strong>, ship <strong>real products</strong>, and teach IT the way it should be taught.</p>
+
+  <div class="hero-btns">
+    <a href="#services" class="btn-primary" data-i="hb1">Our services <span class="arr">→</span></a>
+    <a href="#academy" class="btn-ghost" data-i="hb2">Learn to code</a>
   </div>
-  <div class="agrid">
-    <div class="fi">
-      <p class="alead" data-i18n="about_lead">Вік — це цифра. Рівень коду — ні.</p>
-      <p class="ap" data-i18n="about_p1"><em>NovaCore</em> — IT-студія та освітня платформа, заснована <strong>Андрієм</strong> та <strong>Артемом</strong>. Нам по 15. Ми вирішуємо реальні задачі реальним кодом — і навчаємо інших робити те саме.</p>
-      <p class="ap" data-i18n="about_p2">Ми не пишемо "навчальні проекти". Кожен рядок — це <strong>робочий продукт</strong> з продуманою архітектурою. Кожен урок — це практика, а не теорія заради теорії.</p>
-      <div class="manifesto">
-        <p data-i18n="manifesto">
-          <strong>Ми віримо</strong> — що вік не визначає рівень.<br>
-          <strong>Ми віримо</strong> — що найкращий спосіб вчитись — це робити.<br>
-          <strong>Ми віримо</strong> — що кожен здатен освоїти IT — якщо пояснити правильно.
-        </p>
-      </div>
-      <div class="chips">
-        <span class="chip">HTML/CSS</span><span class="chip">JavaScript</span><span class="chip">Python</span>
-        <span class="chip">React</span><span class="chip">Node.js</span><span class="chip">Git</span>
-        <span class="chip">REST API</span><span class="chip">Databases</span><span class="chip">Figma</span>
-        <span class="chip">Linux</span><span class="chip">Docker</span><span class="chip">+ багато іншого</span>
-      </div>
-    </div>
-    <div class="bars-wrap fi" id="barsEl">
-      <div><div class="blabel">Frontend Development<span>85%</span></div><div class="btrack"><div class="bfill" style="width:85%"></div></div></div>
-      <div><div class="blabel">Python / Backend<span>72%</span></div><div class="btrack"><div class="bfill" style="width:72%"></div></div></div>
-      <div><div class="blabel">UI / Product Design<span>76%</span></div><div class="btrack"><div class="bfill" style="width:76%"></div></div></div>
-      <div><div class="blabel" data-i18n="bar_arch">Системна архітектура<span>70%</span></div><div class="btrack"><div class="bfill" style="width:70%"></div></div></div>
-      <div><div class="blabel" data-i18n="bar_team">Командна синергія<span>97%</span></div><div class="btrack"><div class="bfill" style="width:97%"></div></div></div>
-      <div><div class="blabel" data-i18n="bar_learn">Швидкість навчання<span>99%</span></div><div class="btrack"><div class="bfill" style="width:99%"></div></div></div>
-    </div>
+
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-v" data-count="2">0</div><div class="hstat-l" data-i="hs1">founders</div></div>
+    <div class="hstat"><div class="hstat-v" data-count="15">0</div><div class="hstat-l" data-i="hs2">years old each</div></div>
+    <div class="hstat"><div class="hstat-v">∞</div><div class="hstat-l" data-i="hs3">possibilities</div></div>
   </div>
+
+  <div class="scroll-hint"><span class="scroll-line"></span><span data-i="scroll">Scroll</span></div>
 </section>
 
 <!-- SERVICES -->
-<section id="services" class="sec">
-  <div class="shead fi">
-    <span class="sey" data-i18n="svc_sey">// 02 — ПОСЛУГИ</span>
-    <h2 class="sh" data-i18n="svc_title">Що ми робимо</h2>
-    <p class="ssub" data-i18n="svc_sub">Повний спектр IT-розробки — від ідеї до готового продукту.</p>
+<section id="services" class="sec sec-alt sec-top">
+  <div class="sec-head reveal">
+    <div class="eyebrow" data-i="s_ey">// 01 — Services</div>
+    <h2 class="sec-title" data-i="s_h">What we build</h2>
+    <p class="sec-sub" data-i="s_s">Full IT stack — from idea to production. We don't just write code, we engineer solutions.</p>
   </div>
-  <div class="svc-cats fi">
-    <div class="svc-cat"><div class="cat-num">01</div><span class="cat-icon">🌐</span><div class="cat-title" data-i18n="svc1_title">Веб-розробка</div><p class="cat-desc" data-i18n="svc1_desc">Створюємо сайти та веб-застосунки будь-якої складності. Пишемо чистий, масштабований код — без шаблонів, без копіпасти.</p><div class="svc-list"><span class="svc-item">Landing Page</span><span class="svc-item" data-i18n="svc_corp">Корпоративний сайт</span><span class="svc-item" data-i18n="svc_port">Портфоліо</span><span class="svc-item">SPA / React</span><span class="svc-item" data-i18n="svc_webapp">Веб-застосунок</span><span class="svc-item">HTML/CSS/JS</span><span class="svc-item" data-i18n="svc_resp">Адаптивний дизайн</span><span class="svc-item">SEO</span></div></div>
-    <div class="svc-cat"><div class="cat-num">02</div><span class="cat-icon">⚙️</span><div class="cat-title">Backend & API</div><p class="cat-desc" data-i18n="svc2_desc">Розробляємо серверну частину, REST API, бази даних та автоматизацію. Логіка на Python та Node.js — надійно і по-дорослому.</p><div class="svc-list"><span class="svc-item">REST API</span><span class="svc-item">Python / Flask</span><span class="svc-item">Node.js / Express</span><span class="svc-item">PostgreSQL</span><span class="svc-item">MongoDB</span><span class="svc-item">JWT Auth</span><span class="svc-item" data-i18n="svc_parse">Парсинг даних</span><span class="svc-item" data-i18n="svc_auto">Автоматизація</span></div></div>
-    <div class="svc-cat"><div class="cat-num">03</div><span class="cat-icon">🤖</span><div class="cat-title" data-i18n="svc3_title">Боти & Автоматизація</div><p class="cat-desc" data-i18n="svc3_desc">Telegram-боти, Discord-боти, скрипти автоматизації та інтеграції. Все що позбавить вас від рутини.</p><div class="svc-list"><span class="svc-item">Telegram Bot</span><span class="svc-item">Discord Bot</span><span class="svc-item" data-i18n="svc_scripts">Python-скрипти</span><span class="svc-item" data-i18n="svc_parsers">Парсери</span><span class="svc-item">API Integration</span><span class="svc-item" data-i18n="svc_notif">Сповіщення</span><span class="svc-item">Auto-posting</span><span class="svc-item" data-i18n="svc_games">Міні-ігри в боті</span></div></div>
-    <div class="svc-cat"><div class="cat-num">04</div><span class="cat-icon">🎨</span><div class="cat-title" data-i18n="svc4_title">UI/UX & Дизайн</div><p class="cat-desc" data-i18n="svc4_desc">Проектуємо інтерфейси, якими приємно користуватись. Figma-прототипи, дизайн-системи та візуальна ідентика продукту.</p><div class="svc-list"><span class="svc-item">UI/UX Design</span><span class="svc-item">Figma Prototype</span><span class="svc-item" data-i18n="svc_ds">Дизайн-система</span><span class="svc-item" data-i18n="svc_brand">Брендинг</span><span class="svc-item" data-i18n="svc_logo">Логотип</span><span class="svc-item" data-i18n="svc_anim">Анімації UI</span></div></div>
-    <div class="svc-cat"><div class="cat-num">05</div><span class="cat-icon">🛡️</span><div class="cat-title" data-i18n="svc5_title">Кібербезпека</div><p class="cat-desc" data-i18n="svc5_desc">Базовий аудит безпеки, аналіз вразливостей, рекомендації щодо захисту. Знаємо як зламують — тому знаємо як захищати.</p><div class="svc-list"><span class="svc-item" data-i18n="svc_audit">Аудит безпеки</span><span class="svc-item">SQL Injection</span><span class="svc-item">XSS/CSRF</span><span class="svc-item" data-i18n="svc_encrypt">Шифрування</span><span class="svc-item">HTTPS/SSL</span></div></div>
-    <div class="svc-cat"><div class="cat-num">06</div><span class="cat-icon">📊</span><div class="cat-title" data-i18n="svc6_title">Data & Аналітика</div><p class="cat-desc" data-i18n="svc6_desc">Працюємо з даними — збір, обробка, візуалізація. Дашборди, звіти, парсинг — автоматично і красиво.</p><div class="svc-list"><span class="svc-item">Python + Pandas</span><span class="svc-item" data-i18n="svc_viz">Візуалізація</span><span class="svc-item" data-i18n="svc_dash">Дашборди</span><span class="svc-item">CSV/Excel</span><span class="svc-item" data-i18n="svc_reports">Звіти</span></div></div>
+  <div class="svc-rows reveal">
+    <div class="svc-r"><span class="svc-n">01</span><div class="svc-mid"><div class="svc-name" data-i="sv1">Web Development</div><div class="svc-chips"><span class="chip">Landing Page</span><span class="chip">SPA / React</span><span class="chip">Corporate Site</span><span class="chip">Portfolio</span><span class="chip">Responsive</span><span class="chip">SEO</span></div></div><span class="svc-arr">→</span></div>
+    <div class="svc-r"><span class="svc-n">02</span><div class="svc-mid"><div class="svc-name">Backend & API</div><div class="svc-chips"><span class="chip">Python / Flask</span><span class="chip">Node.js</span><span class="chip">REST API</span><span class="chip">PostgreSQL</span><span class="chip">MongoDB</span><span class="chip">JWT Auth</span></div></div><span class="svc-arr">→</span></div>
+    <div class="svc-r"><span class="svc-n">03</span><div class="svc-mid"><div class="svc-name" data-i="sv3">Telegram & Discord Bots</div><div class="svc-chips"><span class="chip">Telegram Bot</span><span class="chip">Discord Bot</span><span class="chip">Auto-posting</span><span class="chip">Mini-games</span><span class="chip">Notifications</span><span class="chip">Shop Bot</span></div></div><span class="svc-arr">→</span></div>
+    <div class="svc-r"><span class="svc-n">04</span><div class="svc-mid"><div class="svc-name" data-i="sv4">Python & Automation</div><div class="svc-chips"><span class="chip">Scripts</span><span class="chip">Parsing / Scraping</span><span class="chip">Pandas</span><span class="chip">Excel / CSV</span><span class="chip">Task Automation</span><span class="chip">AI Integration</span></div></div><span class="svc-arr">→</span></div>
+    <div class="svc-r"><span class="svc-n">05</span><div class="svc-mid"><div class="svc-name" data-i="sv5">UI/UX & Design</div><div class="svc-chips"><span class="chip">Figma</span><span class="chip">Prototypes</span><span class="chip">Branding</span><span class="chip">Logo</span><span class="chip">Design System</span></div></div><span class="svc-arr">→</span></div>
+    <div class="svc-r"><span class="svc-n">06</span><div class="svc-mid"><div class="svc-name" data-i="sv6">Data & Analytics</div><div class="svc-chips"><span class="chip">Dashboards</span><span class="chip">Visualization</span><span class="chip">Reports</span><span class="chip">Pandas</span><span class="chip">Charts</span></div></div><span class="svc-arr">→</span></div>
+    <div class="svc-r"><span class="svc-n">07</span><div class="svc-mid"><div class="svc-name" data-i="sv7">Cybersecurity</div><div class="svc-chips"><span class="chip">Security Audit</span><span class="chip">SQL Injection</span><span class="chip">XSS Protection</span><span class="chip">HTTPS / SSL</span><span class="chip">Encryption</span></div></div><span class="svc-arr">→</span></div>
+    <div class="svc-r"><span class="svc-n">08</span><div class="svc-mid"><div class="svc-name" data-i="sv8">Deploy & DevOps</div><div class="svc-chips"><span class="chip">GitHub Pages</span><span class="chip">Vercel</span><span class="chip">Docker</span><span class="chip">VPS</span><span class="chip">CI/CD</span><span class="chip">Linux</span></div></div><span class="svc-arr">→</span></div>
   </div>
 </section>
 
 <!-- PRICING -->
-<section id="pricing" class="sec sec-dark">
-  <div class="shead fi">
-    <span class="sey" data-i18n="price_sey">// 03 — ЦІНИ</span>
-    <h2 class="sh" data-i18n="price_title">Прозорі ціни</h2>
-    <p class="ssub" data-i18n="price_sub">Чесні ціни без прихованих платежів. Оплата в $. Оплата в $ або крипті.</p>
+<section id="pricing" class="sec sec-top">
+  <div class="sec-head reveal">
+    <div class="eyebrow" data-i="pr_ey">// 02 — Pricing</div>
+    <h2 class="sec-title" data-i="pr_h">Transparent pricing</h2>
+    <p class="sec-sub" data-i="pr_s">No hidden fees. Clear scope. Pay in USD or crypto.</p>
   </div>
-  <div class="price-grid fi">
-    <div class="pricec">
-      <span class="plan-ico">⚡</span>
-      <div class="plan-name" data-i18n="plan1_name">Старт</div>
-      <p class="plan-desc" data-i18n="plan1_desc">Для простих завдань та невеликих проектів. Швидко, якісно, по ділу.</p>
-      <div class="plan-price"><span class="amt">from $15</span><span class="cur">USD</span></div>
-      <ul class="plan-features">
-        <li data-i18n="plan1_f1">Landing page або простий сайт</li>
-        <li data-i18n="plan1_f2">Telegram-бот базовий</li>
-        <li data-i18n="plan1_f3">Простий Python-скрипт</li>
-        <li data-i18n="plan1_f4">Термін: 1–3 дні</li>
-        <li data-i18n="plan1_f5">1 раунд правок</li>
+  <div class="price-cards reveal">
+    <div class="pc">
+      <div class="pc-name" data-i="p1n">Starter</div>
+      <p class="pc-desc" data-i="p1d">Fast and straight to the point — for focused tasks.</p>
+      <div class="pc-price"><span class="amt">$30</span><span class="range"> — $80</span></div>
+      <ul class="pc-list">
+        <li data-i="p1f1">Landing page / simple website</li>
+        <li data-i="p1f2">Basic Telegram bot</li>
+        <li data-i="p1f3">Python script / parser</li>
+        <li data-i="p1f4">Timeline: 1–4 days</li>
+        <li data-i="p1f5">1 round of revisions</li>
       </ul>
-      <button class="plan-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" data-i18n="plan_btn">Замовити</button>
+      <a href="#contact" class="pc-btn" data-i="pbtn">Order now</a>
     </div>
-    <div class="pricec featured">
-      <div class="featured-badge" data-i18n="popular">Популярне</div>
-      <span class="plan-ico">🔥</span>
-      <div class="plan-name" data-i18n="plan2_name">Про</div>
-      <p class="plan-desc" data-i18n="plan2_desc">Повноцінний проект з дизайном, бекендом та підтримкою після здачі.</p>
-      <div class="plan-price"><span class="amt">from $50</span><span class="cur">USD</span></div>
-      <ul class="plan-features">
-        <li data-i18n="plan2_f1">Багатосторінковий сайт або SPA</li>
-        <li data-i18n="plan2_f2">Backend + API + база даних</li>
-        <li data-i18n="plan2_f3">UI/UX дизайн в Figma</li>
-        <li data-i18n="plan2_f4">Термін: 5–14 днів</li>
-        <li data-i18n="plan2_f5">Необмежені правки</li>
-        <li data-i18n="plan2_f6">Підтримка 30 днів</li>
+    <div class="pc feat">
+      <div class="pc-tag" data-i="popular">Most popular</div>
+      <div class="pc-name" data-i="p2n">Pro</div>
+      <p class="pc-desc" data-i="p2d">Full project with design, backend and ongoing support.</p>
+      <div class="pc-price"><span class="amt">$150</span><span class="range"> — $300</span></div>
+      <ul class="pc-list">
+        <li data-i="p2f1">Multi-page site or SPA</li>
+        <li data-i="p2f2">Backend + API + database</li>
+        <li data-i="p2f3">UI/UX design in Figma</li>
+        <li data-i="p2f4">Timeline: 7–14 days</li>
+        <li data-i="p2f5">Unlimited revisions</li>
+        <li data-i="p2f6">30-day support</li>
       </ul>
-      <button class="plan-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" data-i18n="plan_btn">Замовити</button>
+      <a href="#contact" class="pc-btn" data-i="pbtn">Order now</a>
     </div>
-    <div class="pricec">
-      <span class="plan-ico">🚀</span>
-      <div class="plan-name" data-i18n="plan3_name">Команда</div>
-      <p class="plan-desc" data-i18n="plan3_desc">Складні проекти під ключ. Повна розробка від ідеї до деплою.</p>
-      <div class="plan-price"><span class="amt">from $120</span><span class="cur">USD</span></div>
-      <ul class="plan-features">
-        <li data-i18n="plan3_f1">Складний веб-застосунок</li>
-        <li data-i18n="plan3_f2">Мобільна адаптація</li>
-        <li data-i18n="plan3_f3">Деплой та хостинг</li>
-        <li data-i18n="plan3_f4">SEO оптимізація</li>
-        <li data-i18n="plan3_f5">Термін: за домовленістю</li>
-        <li data-i18n="plan3_f6">Підтримка 90 днів</li>
+    <div class="pc">
+      <div class="pc-name" data-i="p3n">Studio</div>
+      <p class="pc-desc" data-i="p3d">Complex turnkey project — from idea to deployment.</p>
+      <div class="pc-price"><span class="amt">$300</span><span class="range">+</span></div>
+      <ul class="pc-list">
+        <li data-i="p3f1">Complex web application</li>
+        <li data-i="p3f2">Mobile responsive</li>
+        <li data-i="p3f3">Deploy & hosting</li>
+        <li data-i="p3f4">SEO optimization</li>
+        <li data-i="p3f5">Timeline: negotiable</li>
+        <li data-i="p3f6">90-day support</li>
       </ul>
-      <button class="plan-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" data-i18n="plan_btn">Замовити</button>
+      <a href="#contact" class="pc-btn" data-i="pbtn">Order now</a>
     </div>
   </div>
-
-  <!-- CRYPTO -->
-  <div class="crypto-wrap fi">
-    <div class="crypto-title" data-i18n="crypto_title">💳 Приймаємо оплату</div>
-    <div class="crypto-list">
-      <div class="ctag"><span class="ctag-ico">🇺🇦</span><span>Гривня (UAH)</span></div>
-      <div class="ctag"><span class="ctag-ico">₿</span><span>Bitcoin (BTC)</span></div>
-      <div class="ctag"><span class="ctag-ico">⟠</span><span>Ethereum (ETH)</span></div>
-      <div class="ctag"><span class="ctag-ico">◎</span><span>Solana (SOL)</span></div>
-      <div class="ctag"><span class="ctag-ico">💎</span><span>TON</span></div>
-      <div class="ctag"><span class="ctag-ico">💵</span><span>USDT (TRC20)</span></div>
-      <div class="ctag"><span class="ctag-ico">💵</span><span>USDC</span></div>
-      <div class="ctag"><span class="ctag-ico">🐸</span><span>Litecoin (LTC)</span></div>
+  <div class="crypto-strip reveal">
+    <div class="crypto-label" data-i="crlbl">We accept</div>
+    <div class="crypto-coins">
+      <div class="coin">🇺🇦 UAH</div>
+      <div class="coin">💵 USDT</div>
+      <div class="coin">₿ Bitcoin</div>
+      <div class="coin">⟠ Ethereum</div>
+      <div class="coin">◎ Solana</div>
+      <div class="coin">💎 TON</div>
+      <div class="coin">💵 USDC</div>
+      <div class="coin">🪙 Litecoin</div>
     </div>
   </div>
 </section>
 
-<!-- TEACHING -->
-<section id="teaching" class="sec sec-alt">
-  <div class="shead fi">
-    <span class="sey" data-i18n="teach_sey">// 04 — НАВЧАННЯ</span>
-    <h2 class="sh" data-i18n="teach_title">NovaCore Academy</h2>
-    <p class="ssub" data-i18n="teach_sub">Навчаємо IT так, як хотіли б вчитись самі — на практиці, з реальними проектами.</p>
+<!-- PORTFOLIO -->
+<section id="portfolio" class="sec sec-alt sec-top">
+  <div class="sec-head reveal">
+    <div class="eyebrow" data-i="po_ey">// 03 — Portfolio</div>
+    <h2 class="sec-title" data-i="po_h">Our work</h2>
+    <p class="sec-sub" data-i="po_s">Real projects — live code, shipped products.</p>
   </div>
-  <div class="teach-grid fi">
-    <div class="tcourse"><span class="tc-ico">🚀</span><div class="tc-level" data-i18n="lvl_zero">▸ Рівень: З нуля</div><div class="tc-title" data-i18n="course1_title">Основи програмування</div><p class="tc-desc" data-i18n="course1_desc">Для тих, хто ніколи не відкривав редактор. Поясним що таке код і як написати першу програму — вже на першому уроці.</p><div class="tc-price">from $3<span style="font-size:.75rem;color:var(--m2);letter-spacing:2px;"> / lesson</span></div><div class="tc-tags"><span class="tc-tag">Python</span><span class="tc-tag" data-i18n="tc_logic">Логіка</span><span class="tc-tag" data-i18n="tc_algo">Алгоритми</span></div></div>
-    <div class="tcourse"><span class="tc-ico">🌐</span><div class="tc-level" data-i18n="lvl_begin">▸ Рівень: Початковий</div><div class="tc-title" data-i18n="course2_title">Веб з нуля</div><p class="tc-desc" data-i18n="course2_desc">HTML, CSS, JavaScript — все що треба щоб зробити перший сайт. Без зануд, з живими прикладами. Наприкінці — твій сайт в інтернеті.</p><div class="tc-price">from $3<span style="font-size:.75rem;color:var(--m2);letter-spacing:2px;"> / lesson</span></div><div class="tc-tags"><span class="tc-tag">HTML</span><span class="tc-tag">CSS</span><span class="tc-tag">JavaScript</span><span class="tc-tag">Git</span></div></div>
-    <div class="tcourse"><span class="tc-ico">🐍</span><div class="tc-level" data-i18n="lvl_begin">▸ Рівень: Початковий</div><div class="tc-title" data-i18n="course3_title">Python з нуля</div><p class="tc-desc" data-i18n="course3_desc">Вчимо через задачі та проекти: автоматизація, робота з файлами, прості скрипти. Жодної зайвої теорії.</p><div class="tc-price">from $3<span style="font-size:.75rem;color:var(--m2);letter-spacing:2px;"> / lesson</span></div><div class="tc-tags"><span class="tc-tag">Python</span><span class="tc-tag" data-i18n="tc_scripts">Скрипти</span><span class="tc-tag">OOP</span></div></div>
-    <div class="tcourse"><span class="tc-ico">⚛️</span><div class="tc-level" data-i18n="lvl_mid">▸ Рівень: Середній</div><div class="tc-title" data-i18n="course4_title">React & Frontend Pro</div><p class="tc-desc" data-i18n="course4_desc">Компонентний підхід, хуки, state management та реальні SPA-застосунки. Після курсу — вмієш те, за що платять гроші.</p><div class="tc-price">from $5<span style="font-size:.75rem;color:var(--m2);letter-spacing:2px;"> / lesson</span></div><div class="tc-tags"><span class="tc-tag">React</span><span class="tc-tag">Hooks</span><span class="tc-tag">TypeScript</span></div></div>
-    <div class="tcourse"><span class="tc-ico">🤖</span><div class="tc-level" data-i18n="lvl_begin_plus">▸ Рівень: Початковий+</div><div class="tc-title" data-i18n="course5_title">Боти & Автоматизація</div><p class="tc-desc" data-i18n="course5_desc">Пишемо Telegram-ботів, автоматизуємо рутину, підключаємо API. Кожен урок закінчується робочим ботом.</p><div class="tc-price">from $4<span style="font-size:.75rem;color:var(--m2);letter-spacing:2px;"> / lesson</span></div><div class="tc-tags"><span class="tc-tag">Telegram Bot</span><span class="tc-tag">Python</span><span class="tc-tag">Deploy</span></div></div>
-    <div class="tcourse"><span class="tc-ico">🗄️</span><div class="tc-level" data-i18n="lvl_mid">▸ Рівень: Середній</div><div class="tc-title" data-i18n="course6_title">Бази даних & Backend</div><p class="tc-desc" data-i18n="course6_desc">SQL, проектування БД, REST API на Python або Node.js. Розумієш серверну частину — розумієш весь інтернет.</p><div class="tc-price">from $5<span style="font-size:.75rem;color:var(--m2);letter-spacing:2px;"> / lesson</span></div><div class="tc-tags"><span class="tc-tag">SQL</span><span class="tc-tag">PostgreSQL</span><span class="tc-tag">FastAPI</span></div></div>
+  <div class="port-grid reveal">
+    <div class="pcard">
+      <div class="pcard-top"><div class="pcard-top-bg" style="background:radial-gradient(circle,rgba(230,0,0,.12),transparent 68%);"></div><div class="pcard-ico">🌐</div><div class="pcard-status st-live">● LIVE</div></div>
+      <div class="pcard-body"><div class="pcard-num">NC — 001</div><div class="pcard-title">NovaCore Studio</div><p class="pcard-desc" data-i="pj1d">This website — our main project. Custom design, 3 languages, animated hero, contact form that opens Telegram. Built from scratch, no frameworks.</p><div class="pcard-stack"><span class="pcard-tag">HTML</span><span class="pcard-tag">CSS</span><span class="pcard-tag">JavaScript</span><span class="pcard-tag">i18n</span></div><a href="https://ahefh.github.io/NovaCore/" target="_blank" class="pcard-link" data-i="pjopen">View site →</a></div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-top"><div class="pcard-top-bg" style="background:radial-gradient(circle,rgba(0,170,80,.08),transparent 68%);"></div><div class="pcard-ico">🤖</div><div class="pcard-status st-live">● LIVE</div></div>
+      <div class="pcard-body"><div class="pcard-num">NC — 002</div><div class="pcard-title">Telegram Bot</div><p class="pcard-desc" data-i="pj2d">Custom Telegram bot built for a client — automated responses, command handling, user flow, API integration. Delivered in 2 days.</p><div class="pcard-stack"><span class="pcard-tag">Python</span><span class="pcard-tag">aiogram</span><span class="pcard-tag">REST API</span><span class="pcard-tag">Deploy</span></div><a href="https://t.me/Dexter1938" target="_blank" class="pcard-link" data-i="pjchat">Contact for details →</a></div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-top"><div class="pcard-top-bg" style="background:radial-gradient(circle,rgba(80,100,255,.08),transparent 68%);"></div><div class="pcard-ico">⚙️</div><div class="pcard-status st-live">● LIVE</div></div>
+      <div class="pcard-body"><div class="pcard-num">NC — 003</div><div class="pcard-title">Python Automation</div><p class="pcard-desc" data-i="pj3d">Automation scripts and tooling built for real clients. Parsing, data processing, scheduled tasks. Saves hours of manual work per week.</p><div class="pcard-stack"><span class="pcard-tag">Python</span><span class="pcard-tag">Pandas</span><span class="pcard-tag">Automation</span><span class="pcard-tag">Scripting</span></div><a href="https://t.me/Dexter1938" target="_blank" class="pcard-link" data-i="pjchat">Contact for details →</a></div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-top"><div class="pcard-top-bg" style="background:radial-gradient(circle,rgba(255,160,0,.07),transparent 68%);"></div><div class="pcard-ico">⚡</div><div class="pcard-status st-wip">◐ WIP</div></div>
+      <div class="pcard-body"><div class="pcard-num">NC — 004</div><div class="pcard-title" data-i="pj4t">Next Project</div><p class="pcard-desc" data-i="pj4d">Already in development. New stack, new challenge, new result. Follow us on Telegram for updates.</p><div class="pcard-stack"><span class="pcard-tag">Coming soon</span></div><a href="https://t.me/Dexter1938" target="_blank" class="pcard-link" data-i="pjfollow">Follow us →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ACADEMY -->
+<section id="academy" class="sec sec-top">
+  <div class="sec-head reveal">
+    <div class="eyebrow" data-i="ac_ey">// 04 — Academy</div>
+    <h2 class="sec-title" data-i="ac_h">NovaCore Academy</h2>
+  </div>
+  <div class="academy-header reveal">
+    <div class="academy-big" data-i="ac_big">Zero boring theory.<br>100% <span>real code.</span></div>
+    <div class="academy-right">
+      <p data-i="ac_p1">We explain complex things simply. Every lesson ends with a <strong>working result</strong>, not just notes.</p>
+      <p data-i="ac_p2">After each module — a <strong>real project in your GitHub portfolio</strong>. Not a certificate. A live product.</p>
+    </div>
+  </div>
+  <div class="courses reveal">
+    <div class="course"><div class="c-ico">🚀</div><div class="c-lv" data-i="lv0">From scratch</div><div class="c-name" data-i="c1t">Programming Basics</div><p class="c-desc" data-i="c1d">Never coded before? First working program — in lesson one.</p><div class="c-price">$3<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">Python</span><span class="c-tag">Logic</span><span class="c-tag">Algorithms</span></div></div>
+    <div class="course"><div class="c-ico">🌐</div><div class="c-lv" data-i="lv1">Beginner</div><div class="c-name" data-i="c2t">Web from scratch</div><p class="c-desc" data-i="c2d">HTML, CSS, JavaScript. By the end — your site is live on the internet.</p><div class="c-price">$3<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">HTML</span><span class="c-tag">CSS</span><span class="c-tag">JS</span><span class="c-tag">Git</span></div></div>
+    <div class="course"><div class="c-ico">🐍</div><div class="c-lv" data-i="lv1">Beginner</div><div class="c-name" data-i="c3t">Python from scratch</div><p class="c-desc" data-i="c3d">Scripts, automation, OOP. Zero unnecessary theory.</p><div class="c-price">$3<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">Python</span><span class="c-tag">OOP</span><span class="c-tag">Scripts</span></div></div>
+    <div class="course"><div class="c-ico">🤖</div><div class="c-lv" data-i="lv1p">Beginner+</div><div class="c-name" data-i="c4t">Bots & Automation</div><p class="c-desc" data-i="c4d">Telegram bots, Discord bots, APIs. Every lesson = working bot.</p><div class="c-price">$4<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">Telegram</span><span class="c-tag">Python</span><span class="c-tag">API</span></div></div>
+    <div class="course"><div class="c-ico">⚛️</div><div class="c-lv" data-i="lvm">Intermediate</div><div class="c-name" data-i="c5t">React & Frontend Pro</div><p class="c-desc" data-i="c5d">Components, hooks, SPA. The skills that actually get you hired.</p><div class="c-price">$5<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">React</span><span class="c-tag">Hooks</span><span class="c-tag">TypeScript</span></div></div>
+    <div class="course"><div class="c-ico">🗄️</div><div class="c-lv" data-i="lvm">Intermediate</div><div class="c-name" data-i="c6t">Databases & Backend</div><p class="c-desc" data-i="c6d">SQL, REST API with Python or Node.js. Understand the server — understand the web.</p><div class="c-price">$5<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">SQL</span><span class="c-tag">PostgreSQL</span><span class="c-tag">FastAPI</span></div></div>
   </div>
 </section>
 
 <!-- TEAM -->
-<section id="team" class="sec">
-  <div class="shead fi">
-    <span class="sey" data-i18n="team_sey">// 05 — КОМАНДА</span>
-    <h2 class="sh" data-i18n="team_title">Засновники</h2>
-    <p class="ssub" data-i18n="team_sub">Двоє — але думаємо як єдиний механізм.</p>
+<section id="team" class="sec sec-alt sec-top">
+  <div class="sec-head reveal">
+    <div class="eyebrow" data-i="tm_ey">// 05 — Team</div>
+    <h2 class="sec-title" data-i="tm_h">The founders</h2>
+    <p class="sec-sub" data-i="tm_s">Two people — one machine.</p>
   </div>
-  <div class="tgrid">
-    <div class="tcard fi"><div class="tnum">01</div><div class="tav">AN</div><div class="tname">Андрій</div><div class="trole" data-i18n="andrey_role">▸ 15 років · Founder & Lead Developer</div><p class="tdesc" data-i18n="andrey_desc">Головний архітектор NovaCore. Відповідає за технічну стратегію, frontend-розробку та освітні програми. Якщо є задача — він вже знає як її вирішити елегантно.</p><div class="ttags"><span class="ttag">Lead Dev</span><span class="ttag">Frontend</span><span class="ttag">Python</span><span class="ttag">Mentor</span></div></div>
-    <div class="tcard fi"><div class="tnum">02</div><div class="tav">AR</div><div class="tname">Артем</div><div class="trole" data-i18n="artem_role">▸ 15 років · Co-Founder & Developer</div><p class="tdesc" data-i18n="artem_desc">Права рука студії. Працює на кожному етапі — від першого коміту до фінального релізу. Надійний, конкретний, результатоорієнтований.</p><div class="ttags"><span class="ttag">Co-Founder</span><span class="ttag">Developer</span><span class="ttag">Backend</span><span class="ttag">Mentor</span></div></div>
-    <div class="tcard tcard-empty fi"><div class="tnum">?</div><div class="tav" style="opacity:.18">??</div><div class="tname" style="opacity:.28" data-i18n="slot_soon">Незабаром</div><div class="trole" data-i18n="slot_role">▸ позиція відкрита</div><p class="tdesc" data-i18n="slot_desc">NovaCore росте. Якщо ти вмієш кодити і хочеш робити щось реальне — це місце може бути твоїм.</p><div class="ttags"><span class="ttag">Open Position</span></div></div>
+  <div class="team-grid reveal">
+    <div class="tcard"><div class="tcard-n">01</div><div class="tcard-av">AN</div><div class="tcard-name">Andrey</div><div class="tcard-role" data-i="an_r">Founder & Lead Dev · 15 y.o.</div><p class="tcard-desc" data-i="an_d">Chief architect of NovaCore. Frontend, Python, education. If there's a problem — he's already building the solution.</p><div class="tcard-tags"><span class="tcard-tag">Lead Dev</span><span class="tcard-tag">Frontend</span><span class="tcard-tag">Python</span><span class="tcard-tag">Mentor</span></div></div>
+    <div class="tcard"><div class="tcard-n">02</div><div class="tcard-av">AR</div><div class="tcard-name">Artem</div><div class="tcard-role" data-i="ar_r">Co-Founder & Dev · 15 y.o.</div><p class="tcard-desc" data-i="ar_d">The right hand of the studio. From first commit to final deploy. Reliable, precise, results-driven.</p><div class="tcard-tags"><span class="tcard-tag">Co-Founder</span><span class="tcard-tag">Backend</span><span class="tcard-tag">QA</span><span class="tcard-tag">Mentor</span></div></div>
+    <div class="tcard tcard-empty"><div class="tcard-n">?</div><div class="tcard-av" style="opacity:.15">??</div><div class="tcard-name" data-i="sl_n">Position open</div><div class="tcard-role" data-i="sl_r">NovaCore is growing</div><p class="tcard-desc" data-i="sl_d">If you can code and want to build real things — this spot might be yours.</p></div>
   </div>
 </section>
 
-<!-- WHY -->
-<section class="sec sec-alt">
-  <div class="shead fi">
-    <span class="sey" data-i18n="why_sey">// 06 — ЧОМУ МИ</span>
-    <h2 class="sh" data-i18n="why_title">Наш підхід</h2>
+<!-- REVIEWS -->
+<section id="reviews" class="sec sec-top">
+  <div class="sec-head reveal">
+    <div class="eyebrow" data-i="rv_ey">// 06 — Reviews</div>
+    <h2 class="sec-title" data-i="rv_h">What people say</h2>
+    <p class="sec-sub" data-i="rv_s">Real words from real people.</p>
   </div>
-  <div class="why-grid fi">
-    <div class="wcard"><div class="wico">01</div><div class="wtitle" data-i18n="why1_t">Код без сміття</div><p class="wdesc" data-i18n="why1_d">Пишемо так, ніби це читає senior developer. Чиста архітектура, зрозумілі імена, нульовий копіпаст.</p></div>
-    <div class="wcard"><div class="wico">02</div><div class="wtitle" data-i18n="why2_t">Результат, не процес</div><p class="wdesc" data-i18n="why2_d">Нас не цікавить "майже готово". Проект або працює як задумано — або ми продовжуємо.</p></div>
-    <div class="wcard"><div class="wico">03</div><div class="wtitle" data-i18n="why3_t">Вчимо через діло</div><p class="wdesc" data-i18n="why3_d">В навчанні — жодної теорії заради теорії. Кожен урок закінчується робочим кодом.</p></div>
-    <div class="wcard"><div class="wico">04</div><div class="wtitle" data-i18n="why4_t">Два мозки — одна ціль</div><p class="wdesc" data-i18n="why4_d">Андрій + Артем — це синергія. Кожен проект отримує вдвічі більше ідей і вдвічі менше помилок.</p></div>
+  <div class="rev-grid reveal">
+    <div class="rcard"><div class="rcard-stars">★★★★★</div><p class="rcard-text">"Ordered a landing page — delivered fast, clean and exactly what I asked for. The site works perfectly. Highly recommend."</p><div class="rcard-auth"><div class="rcard-av">MX</div><div><div class="rcard-name">Maxim</div><div class="rcard-role" data-i="rv1r">Landing page client</div></div></div></div>
+    <div class="rcard"><div class="rcard-stars">★★★★★</div><p class="rcard-text">"Andrey helped me understand Python in 3 lessons — explains clearly, no fluff. I wrote my first automation script after just two weeks."</p><div class="rcard-auth"><div class="rcard-av">DN</div><div><div class="rcard-name">Denis</div><div class="rcard-role" data-i="rv2r">Student — Python from scratch</div></div></div></div>
+    <div class="rcard"><div class="rcard-stars">★★★★★</div><p class="rcard-text">"Got a Telegram bot in 2 days. Stable, clean code — I checked it myself. These guys really know what they're doing."</p><div class="rcard-auth"><div class="rcard-av">IL</div><div><div class="rcard-name">Ilya</div><div class="rcard-role" data-i="rv3r">Telegram bot client</div></div></div></div>
+    <div class="rcard"><div class="rcard-stars" style="color:#29b5e8;letter-spacing:2px;font-size:.8rem;">✓ TELEGRAM VERIFIED</div><p class="rcard-text">"2 times already and both times went perfectly 😎" — real reviews from real users in our Telegram channel.</p><div class="rcard-auth"><div class="rcard-av" style="background:linear-gradient(135deg,#003d5c,#0077a8);color:#29b5e8;border-color:rgba(41,181,232,.2);">TG</div><div><div class="rcard-name" data-i="rv4n">8+ reviews</div><div class="rcard-role">Dexter | Reviews</div></div></div><a href="https://t.me/Dexter1938" target="_blank" class="rcard-link" data-i="rvlink">View channel →</a></div>
   </div>
 </section>
 
 <!-- CONTACT -->
-<section id="contact" class="sec">
-  <div class="cbg"></div>
-  <div class="fi">
-    <h2 class="cbig" data-i18n="contact_big">Є задача або<br><em>хочеш вчитись?</em></h2>
-    <p class="csub" data-i18n="contact_sub">// novacore — пиши, відповімо швидко</p>
-  </div>
-
-  <!-- FORM -->
-  <div class="form-wrap fi">
-    <div class="form-grid">
-      <input class="finput" type="text" id="fname" placeholder="Ваше ім'я" data-i18n-ph="form_name">
-      <input class="finput" type="text" id="fcontact" placeholder="Telegram або Email" data-i18n-ph="form_contact">
+<section id="contact" class="sec sec-alt sec-top">
+  <div class="inner reveal">
+    <div class="ct-left">
+      <h2 class="big" data-i="ct_h">Have a project<br>or want to<br><span>learn?</span></h2>
+      <p class="sub" data-i="ct_p">Write to us — we reply fast. Tell us what you need and we'll make it happen.</p>
+      <div class="ct-links">
+        <a href="https://t.me/Dexter1938" class="ct-link" target="_blank"><div class="ct-link-ico">✈</div><div><div class="ct-link-lbl" data-i="cl1">Telegram — Andrey</div><div class="ct-link-val">@Dexter1938</div></div></a>
+        <a href="https://t.me/vasyalepolov" class="ct-link" target="_blank"><div class="ct-link-ico">✈</div><div><div class="ct-link-lbl" data-i="cl2">Telegram — Artem</div><div class="ct-link-val">@vasyalepolov</div></div></a>
+        <a href="https://github.com/Ahefh" class="ct-link" target="_blank"><div class="ct-link-ico">⬡</div><div><div class="ct-link-lbl">GitHub</div><div class="ct-link-val">github.com/Ahefh</div></div></a>
+        <a href="mailto:bobka9873@gmail.com" class="ct-link"><div class="ct-link-ico">@</div><div><div class="ct-link-lbl">Email</div><div class="ct-link-val">bobka9873@gmail.com</div></div></a>
+      </div>
     </div>
-    <div class="frow">
-      <select class="fselect" id="ftype">
-        <option value="" data-i18n="form_type_ph">Тип запиту</option>
-        <option value="dev" data-i18n="form_dev">Розробка проекту</option>
-        <option value="teach" data-i18n="form_teach">Навчання</option>
-        <option value="bot" data-i18n="form_bot">Telegram-бот</option>
-        <option value="other" data-i18n="form_other">Інше</option>
+    <div class="ct-right">
+      <input class="f-input" id="fn" type="text" placeholder="Your name" data-i-ph="ph_n">
+      <input class="f-input" id="fc" type="text" placeholder="Telegram or Email" data-i-ph="ph_c">
+      <select class="f-sel" id="ft">
+        <option value="" data-i="ft0">Request type</option>
+        <option value="dev" data-i="ft1">Project development</option>
+        <option value="teach" data-i="ft2">Learning / tutoring</option>
+        <option value="bot" data-i="ft3">Telegram bot</option>
+        <option value="other" data-i="ft4">Other</option>
       </select>
+      <textarea class="f-area" id="fm" placeholder="Describe your task..." data-i-ph="ph_m"></textarea>
+      <button class="f-submit" onclick="doSend()"><span data-i="fsub">Send request</span><span class="arr">→</span></button>
     </div>
-    <textarea class="ftextarea" id="fmsg" placeholder="Опишіть вашу задачу..." data-i18n-ph="form_msg"></textarea>
-    <button class="fsubmit" onclick="submitForm()" data-i18n="form_submit">Відправити заявку →</button>
-    <div class="form-success" id="formSuccess">
-      <span class="sico">✅</span>
-      <p data-i18n="form_ok">Заявку отримано! Напишемо вам протягом кількох годин.</p>
-    </div>
-  </div>
-
-  <div class="ccards fi">
-    <a href="https://t.me/Dexter1938" class="ccard" target="_blank" rel="noopener"><div class="cico">✈</div><div class="cinfo"><div class="clbl" data-i18n="tg_andrey">Telegram — Андрій</div><div class="cval">@Dexter1938</div></div></a>
-    <a href="https://t.me/vasyalepolov" class="ccard" target="_blank" rel="noopener"><div class="cico">✈</div><div class="cinfo"><div class="clbl" data-i18n="tg_artem">Telegram — Артем</div><div class="cval">@vasyalepolov</div></div></a>
-    <a href="https://github.com/Ahefh" class="ccard" target="_blank" rel="noopener"><div class="cico">⬡</div><div class="cinfo"><div class="clbl">GitHub</div><div class="cval">github.com/Ahefh</div></div></a>
-    <a href="/cdn-cgi/l/email-protection#14767b767f752d2c2327547379757d783a777b79" class="ccard"><div class="cico">@</div><div class="cinfo"><div class="clbl">Email</div><div class="cval"><span class="__cf_email__" data-cfemail="92f0fdf0f9f3abaaa5a1d2f5fff3fbfebcf1fdff">[email&#160;protected]</span></div></div></a>
   </div>
 </section>
 
 <footer>
-  <div class="flogo">Nova<em>Core</em></div>
-  <div>© 2025 — IT Studio & Academy · Built with <span class="hl">passion + code</span></div>
-  <div>Andrey <span class="hl">&amp;</span> Artem</div>
+  <div class="f-logo">Nova<span>Core</span></div>
+  <span data-i="fc">© 2025 — IT Studio & Academy</span>
+  <span data-i="fb">Andrey & Artem</span>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-/* ── i18n ── */
-const i18n = {
-  uk:{
-    nav_about:'Про нас',nav_services:'Послуги',nav_pricing:'Ціни',nav_teach:'Навчання',nav_team:'Команда',nav_contact:'Контакт',nav_cta:"Зв'язатись",
-    hero_online:'Відкриті для проектів та учнів',hero_tag:'IT Studio & Academy · Andrey & Artem',
-    hero_desc:'Ми <em>розробляємо</em> digital-продукти та <strong>навчаємо IT</strong> з нуля.<br>Реальний код. Живі проекти. Знання, які працюють.',
-    hero_btn1:'Наші послуги',hero_btn2:'Навчання IT',
-    num_founders:'засновники',num_age:'років кожному',num_ideas:'можливостей',scroll:'Scroll to explore',
-    about_sey:'// 01 — ПРО СТУДІЮ',about_sub:'Ми будуємо продукти та ростимо розробників — одночасно.',
-    about_lead:'Вік — це цифра. Рівень коду — ні.',
-    about_p1:'<em>NovaCore</em> — IT-студія та освітня платформа, заснована <strong>Андрієм</strong> та <strong>Артемом</strong>. Нам по 15. Ми вирішуємо реальні задачі реальним кодом.',
-    about_p2:'Ми не пишемо "навчальні проекти". Кожен рядок — це <strong>робочий продукт</strong> з продуманою архітектурою.',
-    manifesto:'<strong>Ми віримо</strong> — що вік не визначає рівень.<br><strong>Ми віримо</strong> — що найкращий спосіб вчитись — це робити.<br><strong>Ми віримо</strong> — що кожен здатен освоїти IT.',
-    bar_arch:'Системна архітектура',bar_team:'Командна синергія',bar_learn:'Швидкість навчання',
-    svc_sey:'// 02 — ПОСЛУГИ',svc_title:'Що ми робимо',svc_sub:'Повний спектр IT-розробки — від ідеї до готового продукту.',
-    svc1_title:'Веб-розробка',svc1_desc:'Створюємо сайти та веб-застосунки. Чистий, масштабований код без шаблонів.',
-    svc2_desc:'Серверна частина, REST API, бази даних. Python та Node.js — надійно.',
-    svc3_title:'Боти & Автоматизація',svc3_desc:'Telegram-боти, Discord-боти, скрипти автоматизації та інтеграції.',
-    svc4_title:'UI/UX & Дизайн',svc4_desc:'Інтерфейси якими приємно користуватись. Figma-прототипи та дизайн-системи.',
-    svc5_title:'Кібербезпека',svc5_desc:'Базовий аудит безпеки, аналіз вразливостей, рекомендації щодо захисту.',
-    svc6_title:'Data & Аналітика',svc6_desc:'Збір, обробка, візуалізація даних. Дашборди, звіти, парсинг.',
-    price_sey:'// 03 — ЦІНИ',price_title:'Прозорі ціни',price_sub:'Чесні ціни без прихованих платежів. Оплата в $. Оплата в $ або крипті.',
-    plan1_name:'Старт',plan1_desc:'Для простих завдань та невеликих проектів.',plan1_f1:'Landing page або простий сайт',plan1_f2:'Telegram-бот базовий',plan1_f3:'Простий Python-скрипт',plan1_f4:'Термін: 1–3 дні',plan1_f5:'1 раунд правок',
-    plan2_name:'Про',plan2_desc:'Повноцінний проект з дизайном та підтримкою.',plan2_f1:'Багатосторінковий сайт або SPA',plan2_f2:'Backend + API + база даних',plan2_f3:'UI/UX дизайн в Figma',plan2_f4:'Термін: 5–14 днів',plan2_f5:'Необмежені правки',plan2_f6:'Підтримка 30 днів',
-    plan3_name:'Команда',plan3_desc:'Складні проекти під ключ від ідеї до деплою.',plan3_f1:'Складний веб-застосунок',plan3_f2:'Мобільна адаптація',plan3_f3:'Деплой та хостинг',plan3_f4:'SEO оптимізація',plan3_f5:'Термін: за домовленістю',plan3_f6:'Підтримка 90 днів',
-    plan_btn:'Замовити',popular:'Популярне',
-    crypto_title:'💳 Приймаємо оплату',
-    teach_sey:'// 04 — НАВЧАННЯ',teach_title:'NovaCore Academy',teach_sub:'Навчаємо IT так, як хотіли б вчитись самі.',
-    lvl_zero:'▸ Рівень: З нуля',lvl_begin:'▸ Рівень: Початковий',lvl_mid:'▸ Рівень: Середній',lvl_begin_plus:'▸ Рівень: Початковий+',
-    course1_title:'Основи програмування',course1_desc:'Для тих, хто ніколи не відкривав редактор. Перша програма — вже на першому уроці.',
-    course2_title:'Веб з нуля',course2_desc:'HTML, CSS, JavaScript. Наприкінці — твій сайт в інтернеті.',
-    course3_title:'Python з нуля',course3_desc:'Вчимо через задачі. Автоматизація, скрипти. Жодної зайвої теорії.',
-    course4_title:'React & Frontend Pro',course4_desc:'Компонентний підхід, хуки, SPA-застосунки. Вмієш те, за що платять.',
-    course5_title:'Боти & Автоматизація',course5_desc:'Пишемо ботів, автоматизуємо рутину. Кожен урок = робочий бот.',
-    course6_title:'Бази даних & Backend',course6_desc:'SQL, REST API на Python або Node.js. Розумієш сервер — розумієш все.',
-    tc_logic:'Логіка',tc_algo:'Алгоритми',tc_scripts:'Скрипти',
-    team_sey:'// 05 — КОМАНДА',team_title:'Засновники',team_sub:'Двоє — але думаємо як єдиний механізм.',
-    andrey_role:'▸ 15 років · Founder & Lead Developer',andrey_desc:'Головний архітектор NovaCore. Frontend, Python, освітні програми. Якщо є задача — знає як вирішити.',
-    artem_role:'▸ 15 років · Co-Founder & Developer',artem_desc:'Права рука студії. Від першого коміту до релізу. Надійний, конкретний, результатоорієнтований.',
-    slot_soon:'Незабаром',slot_role:'▸ позиція відкрита',slot_desc:'NovaCore росте. Якщо вмієш кодити — місце може бути твоїм.',
-    why_sey:'// 06 — ЧОМУ МИ',why_title:'Наш підхід',
-    why1_t:'Код без сміття',why1_d:'Пишемо так, ніби це читає senior developer.',
-    why2_t:'Результат, не процес',why2_d:'Нас не цікавить "майже готово". Або працює — або продовжуємо.',
-    why3_t:'Вчимо через діло',why3_d:'Кожен урок закінчується робочим кодом.',
-    why4_t:'Два мозки — одна ціль',why4_d:'Андрій + Артем — синергія. Більше ідей, менше помилок.',
-    contact_big:'Є задача або<br><em>хочеш вчитись?</em>',contact_sub:'// novacore — пиши, відповімо швидко',
-    form_name:'Ваше ім\'я',form_contact:'Telegram або Email',form_type_ph:'Тип запиту',form_dev:'Розробка проекту',form_teach:'Навчання',form_bot:'Telegram-бот',form_other:'Інше',form_msg:'Опишіть вашу задачу...',form_submit:'Відправити заявку →',form_ok:'Заявку отримано! Напишемо вам протягом кількох годин.',
-    tg_andrey:'Telegram — Андрій',tg_artem:'Telegram — Артем',
-    lsub:'Ініціалізація...',svc_corp:'Корпоративний сайт',svc_port:'Портфоліо',svc_webapp:'Веб-застосунок',svc_resp:'Адаптивний дизайн',svc_parse:'Парсинг даних',svc_auto:'Автоматизація',svc_scripts:'Python-скрипти',svc_parsers:'Парсери',svc_notif:'Сповіщення',svc_games:'Міні-ігри в боті',svc_ds:'Дизайн-система',svc_brand:'Брендинг',svc_logo:'Логотип',svc_anim:'Анімації UI',svc_audit:'Аудит безпеки',svc_encrypt:'Шифрування',svc_viz:'Візуалізація',svc_dash:'Дашборди',svc_reports:'Звіти',
-  },
-  ru:{
-    nav_about:'О нас',nav_services:'Услуги',nav_pricing:'Цены',nav_teach:'Обучение',nav_team:'Команда',nav_contact:'Контакт',nav_cta:'Связаться',
-    hero_online:'Открыты для проектов и учеников',hero_tag:'IT Studio & Academy · Andrey & Artem',
-    hero_desc:'Мы <em>разрабатываем</em> digital-продукты и <strong>обучаем IT</strong> с нуля.<br>Реальный код. Живые проекты. Знания, которые работают.',
-    hero_btn1:'Наши услуги',hero_btn2:'Обучение IT',
-    num_founders:'основателя',num_age:'лет каждому',num_ideas:'возможностей',scroll:'Scroll to explore',
-    about_sey:'// 01 — О СТУДИИ',about_sub:'Строим продукты и растим разработчиков — одновременно.',
-    about_lead:'Возраст — это цифра. Уровень кода — нет.',
-    about_p1:'<em>NovaCore</em> — IT-студия и образовательная платформа, основанная <strong>Андреем</strong> и <strong>Артёмом</strong>. Нам по 15.',
-    about_p2:'Мы не пишем "учебные проекты". Каждая строчка — это <strong>рабочий продукт</strong> с продуманной архитектурой.',
-    manifesto:'<strong>Мы верим</strong> — что возраст не определяет уровень.<br><strong>Мы верим</strong> — что лучший способ учиться — это делать.<br><strong>Мы верим</strong> — что каждый способен освоить IT.',
-    bar_arch:'Системная архитектура',bar_team:'Командная синергия',bar_learn:'Скорость обучения',
-    svc_sey:'// 02 — УСЛУГИ',svc_title:'Что мы делаем',svc_sub:'Полный спектр IT-разработки — от идеи до готового продукта.',
-    svc1_title:'Веб-разработка',svc1_desc:'Создаём сайты и веб-приложения. Чистый, масштабируемый код без шаблонов.',
-    svc2_desc:'Серверная часть, REST API, базы данных. Python и Node.js — надёжно.',
-    svc3_title:'Боты & Автоматизация',svc3_desc:'Telegram-боты, Discord-боты, скрипты автоматизации и интеграции.',
-    svc4_title:'UI/UX & Дизайн',svc4_desc:'Интерфейсы которыми приятно пользоваться. Figma-прототипы и дизайн-системы.',
-    svc5_title:'Кибербезопасность',svc5_desc:'Базовый аудит безопасности, анализ уязвимостей, рекомендации по защите.',
-    svc6_title:'Data & Аналитика',svc6_desc:'Сбор, обработка, визуализация данных. Дашборды, отчёты, парсинг.',
-    price_sey:'// 03 — ЦЕНЫ',price_title:'Прозрачные цены',price_sub:'Честные цены без скрытых платежей. Оплата в $ или крипте.',
-    plan1_name:'Старт',plan1_desc:'Для простых задач и небольших проектов.',plan1_f1:'Landing page или простой сайт',plan1_f2:'Telegram-бот базовый',plan1_f3:'Простой Python-скрипт',plan1_f4:'Срок: 1–3 дня',plan1_f5:'1 раунд правок',
-    plan2_name:'Про',plan2_desc:'Полноценный проект с дизайном и поддержкой.',plan2_f1:'Многостраничный сайт или SPA',plan2_f2:'Backend + API + база данных',plan2_f3:'UI/UX дизайн в Figma',plan2_f4:'Срок: 5–14 дней',plan2_f5:'Неограниченные правки',plan2_f6:'Поддержка 30 дней',
-    plan3_name:'Команда',plan3_desc:'Сложные проекты под ключ от идеи до деплоя.',plan3_f1:'Сложное веб-приложение',plan3_f2:'Мобильная адаптация',plan3_f3:'Деплой и хостинг',plan3_f4:'SEO оптимизация',plan3_f5:'Срок: по договорённости',plan3_f6:'Поддержка 90 дней',
-    plan_btn:'Заказать',popular:'Популярное',
-    crypto_title:'💳 Принимаем оплату',
-    teach_sey:'// 04 — ОБУЧЕНИЕ',teach_title:'NovaCore Academy',teach_sub:'Учим IT так, как хотели бы учиться сами.',
-    lvl_zero:'▸ Уровень: С нуля',lvl_begin:'▸ Уровень: Начальный',lvl_mid:'▸ Уровень: Средний',lvl_begin_plus:'▸ Уровень: Начальный+',
-    course1_title:'Основы программирования',course1_desc:'Для тех, кто никогда не открывал редактор. Первая программа — уже на первом уроке.',
-    course2_title:'Веб с нуля',course2_desc:'HTML, CSS, JavaScript. В конце — твой сайт в интернете.',
-    course3_title:'Python с нуля',course3_desc:'Учим через задачи. Автоматизация, скрипты. Никакой лишней теории.',
-    course4_title:'React & Frontend Pro',course4_desc:'Компонентный подход, хуки, SPA-приложения. Умеешь то, за что платят.',
-    course5_title:'Боты & Автоматизация',course5_desc:'Пишем ботов, автоматизируем рутину. Каждый урок = рабочий бот.',
-    course6_title:'Базы данных & Backend',course6_desc:'SQL, REST API на Python или Node.js. Понимаешь сервер — понимаешь всё.',
-    tc_logic:'Логика',tc_algo:'Алгоритмы',tc_scripts:'Скрипты',
-    team_sey:'// 05 — КОМАНДА',team_title:'Основатели',team_sub:'Двое — но думаем как единый механизм.',
-    andrey_role:'▸ 15 лет · Founder & Lead Developer',andrey_desc:'Главный архитектор NovaCore. Frontend, Python, образовательные программы.',
-    artem_role:'▸ 15 лет · Co-Founder & Developer',artem_desc:'Правая рука студии. От первого коммита до релиза. Надёжный, конкретный.',
-    slot_soon:'Скоро',slot_role:'▸ позиция открыта',slot_desc:'NovaCore растёт. Если умеешь кодить — место может быть твоим.',
-    why_sey:'// 06 — ПОЧЕМУ МЫ',why_title:'Наш подход',
-    why1_t:'Код без мусора',why1_d:'Пишем так, будто это читает senior developer.',
-    why2_t:'Результат, не процесс',why2_d:'Нас не интересует "почти готово". Или работает — или продолжаем.',
-    why3_t:'Учим через дело',why3_d:'Каждый урок заканчивается рабочим кодом.',
-    why4_t:'Два мозга — одна цель',why4_d:'Андрей + Артём — синергия. Больше идей, меньше ошибок.',
-    contact_big:'Есть задача или<br><em>хочешь учиться?</em>',contact_sub:'// novacore — пиши, ответим быстро',
-    form_name:'Ваше имя',form_contact:'Telegram или Email',form_type_ph:'Тип запроса',form_dev:'Разработка проекта',form_teach:'Обучение',form_bot:'Telegram-бот',form_other:'Другое',form_msg:'Опишите вашу задачу...',form_submit:'Отправить заявку →',form_ok:'Заявка получена! Напишем вам в течение нескольких часов.',
-    tg_andrey:'Telegram — Андрей',tg_artem:'Telegram — Артём',
-    lsub:'Инициализация...',svc_corp:'Корпоративный сайт',svc_port:'Портфолио',svc_webapp:'Веб-приложение',svc_resp:'Адаптивный дизайн',svc_parse:'Парсинг данных',svc_auto:'Автоматизация',svc_scripts:'Python-скрипты',svc_parsers:'Парсеры',svc_notif:'Уведомления',svc_games:'Мини-игры в боте',svc_ds:'Дизайн-система',svc_brand:'Брендинг',svc_logo:'Логотип',svc_anim:'Анимации UI',svc_audit:'Аудит безопасности',svc_encrypt:'Шифрование',svc_viz:'Визуализация',svc_dash:'Дашборды',svc_reports:'Отчёты',
-  },
-  en:{
-    nav_about:'About',nav_services:'Services',nav_pricing:'Pricing',nav_teach:'Academy',nav_team:'Team',nav_contact:'Contact',nav_cta:'Get in touch',
-    hero_online:'Open for projects & students',hero_tag:'IT Studio & Academy · Andrey & Artem',
-    hero_desc:'We <em>build</em> digital products and <strong>teach IT</strong> from scratch.<br>Real code. Live projects. Knowledge that actually works.',
-    hero_btn1:'Our services',hero_btn2:'Learn IT',
-    num_founders:'founders',num_age:'years old each',num_ideas:'possibilities',scroll:'Scroll to explore',
-    about_sey:'// 01 — ABOUT',about_sub:'We build products and grow developers — simultaneously.',
-    about_lead:'Age is a number. Code quality is not.',
-    about_p1:'<em>NovaCore</em> is an IT studio & academy founded by <strong>Andrey</strong> and <strong>Artem</strong>. We\'re 15. We solve real problems with real code.',
-    about_p2:'We don\'t write "practice projects". Every line is a <strong>working product</strong> with a solid architecture.',
-    manifesto:'<strong>We believe</strong> — age doesn\'t define skill level.<br><strong>We believe</strong> — the best way to learn is by doing.<br><strong>We believe</strong> — anyone can master IT if taught right.',
-    bar_arch:'System Architecture',bar_team:'Team Synergy',bar_learn:'Learning Speed',
-    svc_sey:'// 02 — SERVICES',svc_title:'What we do',svc_sub:'Full IT development spectrum — from idea to finished product.',
-    svc1_title:'Web Development',svc1_desc:'We build websites and web apps of any complexity. Clean, scalable code — no templates, no copy-paste.',
-    svc2_desc:'Server-side logic, REST APIs, databases. Python and Node.js — reliable and professional.',
-    svc3_title:'Bots & Automation',svc3_desc:'Telegram bots, Discord bots, automation scripts. Everything to eliminate routine.',
-    svc4_title:'UI/UX & Design',svc4_desc:'Interfaces people enjoy using. Figma prototypes, design systems and brand identity.',
-    svc5_title:'Cybersecurity',svc5_desc:'Basic security audits, vulnerability analysis, protection recommendations.',
-    svc6_title:'Data & Analytics',svc6_desc:'Data collection, processing, visualization. Dashboards, reports, parsers.',
-    price_sey:'// 03 — PRICING',price_title:'Transparent pricing',price_sub:'Honest prices, no hidden fees. Pay in $ or crypto.',
-    plan1_name:'Starter',plan1_desc:'For simple tasks and small projects. Fast, quality, straight to the point.',plan1_f1:'Landing page or simple website',plan1_f2:'Basic Telegram bot',plan1_f3:'Simple Python script',plan1_f4:'Timeline: 1–3 days',plan1_f5:'1 revision round',
-    plan2_name:'Pro',plan2_desc:'Full project with design and post-launch support.',plan2_f1:'Multi-page site or SPA',plan2_f2:'Backend + API + database',plan2_f3:'UI/UX design in Figma',plan2_f4:'Timeline: 5–14 days',plan2_f5:'Unlimited revisions',plan2_f6:'30-day support',
-    plan3_name:'Studio',plan3_desc:'Complex turnkey projects from idea to deployment.',plan3_f1:'Complex web application',plan3_f2:'Mobile-responsive',plan3_f3:'Deploy & hosting',plan3_f4:'SEO optimization',plan3_f5:'Timeline: negotiable',plan3_f6:'90-day support',
-    plan_btn:'Order now',popular:'Most popular',
-    crypto_title:'💳 We accept payment',
-    teach_sey:'// 04 — ACADEMY',teach_title:'NovaCore Academy',teach_sub:'We teach IT the way we wish we were taught — hands-on, with real projects.',
-    lvl_zero:'▸ Level: From scratch',lvl_begin:'▸ Level: Beginner',lvl_mid:'▸ Level: Intermediate',lvl_begin_plus:'▸ Level: Beginner+',
-    course1_title:'Programming Basics',course1_desc:'For those who\'ve never opened a code editor. Write your first program in the very first lesson.',
-    course2_title:'Web from scratch',course2_desc:'HTML, CSS, JavaScript. By the end — your website is live on the internet.',
-    course3_title:'Python from scratch',course3_desc:'Learning through tasks. Automation, scripts. Zero unnecessary theory.',
-    course4_title:'React & Frontend Pro',course4_desc:'Component approach, hooks, SPA apps. Learn skills that actually pay.',
-    course5_title:'Bots & Automation',course5_desc:'Build Telegram bots, automate routine. Every lesson = working bot.',
-    course6_title:'Databases & Backend',course6_desc:'SQL, REST API with Python or Node.js. Understand the server — understand the web.',
-    tc_logic:'Logic',tc_algo:'Algorithms',tc_scripts:'Scripts',
-    team_sey:'// 05 — TEAM',team_title:'Founders',team_sub:'Two people — but we think as one.',
-    andrey_role:'▸ 15 y.o. · Founder & Lead Developer',andrey_desc:'Chief architect of NovaCore. Frontend, Python, educational programs. Has a solution for any problem.',
-    artem_role:'▸ 15 y.o. · Co-Founder & Developer',artem_desc:'The right hand of the studio. From first commit to final release. Reliable, concrete, results-driven.',
-    slot_soon:'Coming soon',slot_role:'▸ position open',slot_desc:'NovaCore is growing. If you can code and want to build real things — this spot might be yours.',
-    why_sey:'// 06 — WHY US',why_title:'Our approach',
-    why1_t:'Clean code only',why1_d:'We write as if a senior dev is reading it. Clean architecture, clear names, zero copy-paste.',
-    why2_t:'Results, not process',why2_d:'We don\'t care about "almost done". Either it works — or we keep going.',
-    why3_t:'Learn by doing',why3_d:'Every lesson ends with working code. No theory without practice.',
-    why4_t:'Two brains, one goal',why4_d:'Andrey + Artem = synergy. More ideas, fewer bugs.',
-    contact_big:'Have a project or<br><em>want to learn?</em>',contact_sub:'// novacore — write to us, we reply fast',
-    form_name:'Your name',form_contact:'Telegram or Email',form_type_ph:'Request type',form_dev:'Project development',form_teach:'Learning',form_bot:'Telegram bot',form_other:'Other',form_msg:'Describe your task...',form_submit:'Send request →',form_ok:'Request received! We\'ll get back to you within a few hours.',
-    tg_andrey:'Telegram — Andrey',tg_artem:'Telegram — Artem',
-    lsub:'Initializing...',svc_corp:'Corporate website',svc_port:'Portfolio',svc_webapp:'Web application',svc_resp:'Responsive design',svc_parse:'Data parsing',svc_auto:'Automation',svc_scripts:'Python scripts',svc_parsers:'Parsers',svc_notif:'Notifications',svc_games:'Bot mini-games',svc_ds:'Design system',svc_brand:'Branding',svc_logo:'Logo',svc_anim:'UI animations',svc_audit:'Security audit',svc_encrypt:'Encryption',svc_viz:'Visualization',svc_dash:'Dashboards',svc_reports:'Reports',
-  }
-};
+<style>.d-block{display:block;}</style>
+<script>
+const T={
+en:{
+  n1:'Services',n2:'Pricing',n3:'Portfolio',n4:'Academy',n5:'Team',n6:'Contact',ncta:'Get in touch',
+  badge:'Open for projects & students',
+  h1a:'We Build',h1b:'Digital',h1c:'Products',
+  hsub:'IT studio & coding academy founded by two 15-year-olds. We write <strong>real code</strong>, ship <strong>real products</strong>, and teach IT the way it should be taught.',
+  hb1:'Our services',hb2:'Learn to code',hs1:'founders',hs2:'years old each',hs3:'possibilities',scroll:'Scroll',
+  s_ey:'// 01 — Services',s_h:'What we build',s_s:"Full IT stack — from idea to production. We don't just write code, we engineer solutions.",
+  sv1:'Web Development',sv3:'Telegram & Discord Bots',sv4:'Python & Automation',sv5:'UI/UX & Design',sv6:'Data & Analytics',sv7:'Cybersecurity',sv8:'Deploy & DevOps',
+  pr_ey:'// 02 — Pricing',pr_h:'Transparent pricing',pr_s:'No hidden fees. Clear scope. Pay in USD or crypto.',
+  p1n:'Starter',p1d:'Fast and straight to the point — for focused tasks.',p1f1:'Landing page / simple website',p1f2:'Basic Telegram bot',p1f3:'Python script / parser',p1f4:'Timeline: 1–4 days',p1f5:'1 round of revisions',
+  p2n:'Pro',p2d:'Full project with design, backend and ongoing support.',p2f1:'Multi-page site or SPA',p2f2:'Backend + API + database',p2f3:'UI/UX design in Figma',p2f4:'Timeline: 7–14 days',p2f5:'Unlimited revisions',p2f6:'30-day support',
+  p3n:'Studio',p3d:'Complex turnkey project — from idea to deployment.',p3f1:'Complex web application',p3f2:'Mobile responsive',p3f3:'Deploy & hosting',p3f4:'SEO optimization',p3f5:'Timeline: negotiable',p3f6:'90-day support',
+  pbtn:'Order now',popular:'Most popular',crlbl:'We accept',
+  po_ey:'// 03 — Portfolio',po_h:'Our work',po_s:'Real projects — live code, shipped products.',
+  pj1d:'This website — our main project. Custom design, 3 languages, animated hero, contact form. Built from scratch, no frameworks.',
+  pj2d:'Custom Telegram bot built for a client — automated responses, command handling, API integration. Delivered in 2 days.',
+  pj3d:'Automation scripts and tooling for real clients. Parsing, data processing, scheduled tasks. Saves hours of manual work.',
+  pj4t:'Next Project',pj4d:'Already in development. New stack, new challenge, new result. Follow us for updates.',
+  pjopen:'View site →',pjchat:'Contact for details →',pjfollow:'Follow us →',
+  ac_ey:'// 04 — Academy',ac_h:'NovaCore Academy',
+  ac_big:'Zero boring theory.<br>100% <span>real code.</span>',
+  ac_p1:'We explain complex things simply. Every lesson ends with a <strong>working result</strong>, not just notes.',
+  ac_p2:'After each module — a <strong>real project in your GitHub portfolio</strong>. Not a certificate. A live product.',
+  lv0:'From scratch',lv1:'Beginner',lv1p:'Beginner+',lvm:'Intermediate',pl:' / lesson',
+  c1t:'Programming Basics',c1d:'Never coded before? First working program — in lesson one.',
+  c2t:'Web from scratch',c2d:"HTML, CSS, JavaScript. By the end — your site is live.",
+  c3t:'Python from scratch',c3d:'Scripts, automation, OOP. Zero unnecessary theory.',
+  c4t:'Bots & Automation',c4d:'Telegram bots, Discord bots, APIs. Every lesson = working bot.',
+  c5t:'React & Frontend Pro',c5d:'Components, hooks, SPA. The skills that actually get you hired.',
+  c6t:'Databases & Backend',c6d:'SQL, REST API. Understand the server — understand the web.',
+  tm_ey:'// 05 — Team',tm_h:'The founders',tm_s:'Two people — one machine.',
+  an_r:'Founder & Lead Dev · 15 y.o.',an_d:"Chief architect of NovaCore. Frontend, Python, education. If there's a problem — he's already building the solution.",
+  ar_r:'Co-Founder & Dev · 15 y.o.',ar_d:'The right hand of the studio. From first commit to final deploy. Reliable, precise, results-driven.',
+  sl_n:'Position open',sl_r:'NovaCore is growing',sl_d:'If you can code and want to build real things — this spot might be yours.',
+  rv_ey:'// 06 — Reviews',rv_h:'What people say',rv_s:'Real words from real people.',
+  rv1r:'Landing page client',rv2r:'Student — Python from scratch',rv3r:'Telegram bot client',rv4n:'8+ reviews',rvlink:'View channel →',
+  ct_h:'Have a project<br>or want to<br><span>learn?</span>',ct_p:"Write to us — we reply fast. Tell us what you need and we'll make it happen.",
+  cl1:'Telegram — Andrey',cl2:'Telegram — Artem',
+  ph_n:'Your name',ph_c:'Telegram or Email',ph_m:'Describe your task...',
+  ft0:'Request type',ft1:'Project development',ft2:'Learning / tutoring',ft3:'Telegram bot',ft4:'Other',
+  fsub:'Send request',fc:'© 2025 — IT Studio & Academy',fb:'Andrey & Artem',
+},
+ru:{
+  n1:'Услуги',n2:'Цены',n3:'Портфолио',n4:'Академия',n5:'Команда',n6:'Контакт',ncta:'Связаться',
+  badge:'Открыты для проектов и учеников',
+  h1a:'Мы строим',h1b:'Digital',h1c:'продукты',
+  hsub:'IT-студия и академия, основанные двумя 15-летними. Пишем <strong>настоящий код</strong>, делаем <strong>настоящие продукты</strong> и учим IT так, как надо.',
+  hb1:'Наши услуги',hb2:'Обучение',hs1:'основателя',hs2:'лет каждому',hs3:'возможностей',scroll:'Scroll',
+  s_ey:'// 01 — Услуги',s_h:'Что мы делаем',s_s:'Полный IT-стек — от идеи до продакшена.',
+  sv1:'Веб-разработка',sv3:'Telegram & Discord боты',sv4:'Python & Автоматизация',sv5:'UI/UX & Дизайн',sv6:'Data & Аналитика',sv7:'Кибербезопасность',sv8:'Деплой & DevOps',
+  pr_ey:'// 02 — Цены',pr_h:'Прозрачные цены',pr_s:'Без скрытых платежей. Оплата в $ или крипте.',
+  p1n:'Старт',p1d:'Быстро и по делу — для конкретных задач.',p1f1:'Landing page / простой сайт',p1f2:'Базовый Telegram-бот',p1f3:'Python скрипт / парсер',p1f4:'Срок: 1–4 дня',p1f5:'1 раунд правок',
+  p2n:'Про',p2d:'Полноценный проект с дизайном и поддержкой.',p2f1:'Многостраничный сайт или SPA',p2f2:'Backend + API + база данных',p2f3:'UI/UX дизайн в Figma',p2f4:'Срок: 7–14 дней',p2f5:'Неограниченные правки',p2f6:'Поддержка 30 дней',
+  p3n:'Студия',p3d:'Сложный проект под ключ от идеи до деплоя.',p3f1:'Сложное веб-приложение',p3f2:'Мобильная адаптация',p3f3:'Деплой и хостинг',p3f4:'SEO оптимизация',p3f5:'Срок: по договорённости',p3f6:'Поддержка 90 дней',
+  pbtn:'Заказать',popular:'Популярное',crlbl:'Принимаем оплату',
+  po_ey:'// 03 — Портфолио',po_h:'Наши работы',po_s:'Реальные проекты — живой код, рабочие продукты.',
+  pj1d:'Этот сайт — наш главный проект. Кастомный дизайн, 3 языка, анимации, форма-заявка. Написан с нуля без фреймворков.',
+  pj2d:'Кастомный Telegram-бот для клиента — авто-ответы, команды, API интеграция. Сдали за 2 дня.',
+  pj3d:'Скрипты автоматизации для реальных клиентов. Парсинг, обработка данных, задачи по расписанию.',
+  pj4t:'Следующий проект',pj4d:'Уже в разработке. Следите за обновлениями в Telegram.',
+  pjopen:'Открыть сайт →',pjchat:'Написать для деталей →',pjfollow:'Следить →',
+  ac_ey:'// 04 — Академия',ac_h:'NovaCore Academy',
+  ac_big:'Нуль скучной теории.<br>100% <span>реального кода.</span>',
+  ac_p1:'Объясняем сложное — просто. Каждый урок заканчивается <strong>рабочим результатом</strong>.',
+  ac_p2:'После каждого модуля — <strong>живой проект в GitHub портфолио</strong>. Не сертификат. Продукт.',
+  lv0:'С нуля',lv1:'Начальный',lv1p:'Начальный+',lvm:'Средний',pl:' / урок',
+  c1t:'Основы программирования',c1d:'Никогда не кодил? Первая рабочая программа — уже на первом уроке.',
+  c2t:'Веб с нуля',c2d:'HTML, CSS, JavaScript. В конце — твой сайт в интернете.',
+  c3t:'Python с нуля',c3d:'Скрипты, автоматизация, ООП. Ноль лишней теории.',
+  c4t:'Боты & Автоматизация',c4d:'Telegram-боты, Discord, API. Каждый урок = рабочий бот.',
+  c5t:'React & Frontend Pro',c5d:'Компоненты, хуки, SPA. Навыки которые реально стоят денег.',
+  c6t:'Базы данных & Backend',c6d:'SQL, REST API. Понимаешь сервер — понимаешь всё.',
+  tm_ey:'// 05 — Команда',tm_h:'Основатели',tm_s:'Двое — один механизм.',
+  an_r:'Founder & Lead Dev · 15 лет',an_d:'Главный архитектор NovaCore. Frontend, Python, образование. Если есть задача — уже строит решение.',
+  ar_r:'Co-Founder & Dev · 15 лет',ar_d:'Правая рука студии. От первого коммита до деплоя. Надёжный, конкретный, результатоориентированный.',
+  sl_n:'Позиция открыта',sl_r:'NovaCore растёт',sl_d:'Если умеешь кодить — это место может быть твоим.',
+  rv_ey:'// 06 — Отзывы',rv_h:'Что говорят',rv_s:'Реальные слова реальных людей.',
+  rv1r:'Заказчик лендинга',rv2r:'Ученик — Python с нуля',rv3r:'Заказчик Telegram-бота',rv4n:'8+ отзывов',rvlink:'Смотреть канал →',
+  ct_h:'Есть задача<br>или хочешь<br><span>учиться?</span>',ct_p:'Пиши — ответим быстро. Расскажи что нужно — сделаем.',
+  cl1:'Telegram — Андрей',cl2:'Telegram — Артем',
+  ph_n:'Ваше имя',ph_c:'Telegram или Email',ph_m:'Опишите вашу задачу...',
+  ft0:'Тип запроса',ft1:'Разработка проекта',ft2:'Обучение',ft3:'Telegram-бот',ft4:'Другое',
+  fsub:'Отправить заявку',fc:'© 2025 — IT Studio & Academy',fb:'Андрей & Артем',
+},
+uk:{
+  n1:'Послуги',n2:'Ціни',n3:'Портфоліо',n4:'Академія',n5:'Команда',n6:'Контакт',ncta:"Зв'язатись",
+  badge:'Відкриті для проектів та учнів',
+  h1a:'Ми будуємо',h1b:'Digital',h1c:'продукти',
+  hsub:'IT-студія та академія, засновані двома 15-річними. Пишемо <strong>реальний код</strong>, робимо <strong>реальні продукти</strong> і навчаємо IT як треба.',
+  hb1:'Наші послуги',hb2:'Навчання',hs1:'засновники',hs2:'років кожному',hs3:'можливостей',scroll:'Scroll',
+  s_ey:'// 01 — Послуги',s_h:'Що ми робимо',s_s:'Повний IT-стек — від ідеї до продакшену.',
+  sv1:'Веб-розробка',sv3:'Telegram & Discord боти',sv4:'Python & Автоматизація',sv5:'UI/UX & Дизайн',sv6:'Data & Аналітика',sv7:'Кібербезпека',sv8:'Деплой & DevOps',
+  pr_ey:'// 02 — Ціни',pr_h:'Прозорі ціни',pr_s:'Без прихованих платежів. Оплата в $ або крипті.',
+  p1n:'Старт',p1d:'Швидко і по ділу.',p1f1:'Landing page / простий сайт',p1f2:'Базовий Telegram-бот',p1f3:'Python скрипт / парсер',p1f4:'Термін: 1–4 дні',p1f5:'1 раунд правок',
+  p2n:'Про',p2d:'Повноцінний проект з дизайном та підтримкою.',p2f1:'Багатосторінковий сайт або SPA',p2f2:'Backend + API + база даних',p2f3:'UI/UX дизайн в Figma',p2f4:'Термін: 7–14 днів',p2f5:'Необмежені правки',p2f6:'Підтримка 30 днів',
+  p3n:'Студія',p3d:'Складний проект під ключ.',p3f1:'Складний веб-застосунок',p3f2:'Мобільна адаптація',p3f3:'Деплой та хостинг',p3f4:'SEO оптимізація',p3f5:'Термін: за домовленістю',p3f6:'Підтримка 90 днів',
+  pbtn:'Замовити',popular:'Популярне',crlbl:'Приймаємо оплату',
+  po_ey:'// 03 — Портфоліо',po_h:'Наші роботи',po_s:'Реальні проекти — живий код, робочі продукти.',
+  pj1d:'Цей сайт — наш головний проект. Кастомний дизайн, 3 мови, анімації, форма-заявка.',
+  pj2d:'Кастомний Telegram-бот для клієнта — авто-відповіді, команди, API. Здали за 2 дні.',
+  pj3d:'Скрипти автоматизації для реальних клієнтів. Парсинг, обробка даних.',
+  pj4t:'Наступний проект',pj4d:'Вже в розробці. Слідкуйте за оновленнями.',
+  pjopen:'Відкрити сайт →',pjchat:'Написати для деталей →',pjfollow:'Слідкувати →',
+  ac_ey:'// 04 — Академія',ac_h:'NovaCore Academy',
+  ac_big:'Нуль нудної теорії.<br>100% <span>реального коду.</span>',
+  ac_p1:'Пояснюємо складне — просто. Кожен урок закінчується <strong>робочим результатом</strong>.',
+  ac_p2:'Після кожного модуля — <strong>живий проект у GitHub портфоліо</strong>. Не сертифікат. Продукт.',
+  lv0:'З нуля',lv1:'Початковий',lv1p:'Початковий+',lvm:'Середній',pl:' / урок',
+  c1t:'Основи програмування',c1d:'Ніколи не кодив? Перша робоча програма — вже на першому уроці.',
+  c2t:'Веб з нуля',c2d:'HTML, CSS, JavaScript. Наприкінці — твій сайт в інтернеті.',
+  c3t:'Python з нуля',c3d:'Скрипти, автоматизація, ООП.',
+  c4t:'Боти & Автоматизація',c4d:'Telegram-боти, Discord, API. Кожен урок = робочий бот.',
+  c5t:'React & Frontend Pro',c5d:'Компоненти, хуки, SPA.',
+  c6t:'Бази даних & Backend',c6d:'SQL, REST API.',
+  tm_ey:'// 05 — Команда',tm_h:'Засновники',tm_s:'Двоє — один механізм.',
+  an_r:'Founder & Lead Dev · 15 років',an_d:'Головний архітектор NovaCore. Frontend, Python, освіта.',
+  ar_r:'Co-Founder & Dev · 15 років',ar_d:'Права рука студії. Від першого коміту до деплою.',
+  sl_n:'Позиція відкрита',sl_r:'NovaCore росте',sl_d:'Якщо вмієш кодити — це місце може бути твоїм.',
+  rv_ey:'// 06 — Відгуки',rv_h:'Що кажуть',rv_s:'Реальні слова реальних людей.',
+  rv1r:'Замовник лендингу',rv2r:'Учень — Python з нуля',rv3r:'Замовник Telegram-бота',rv4n:'8+ відгуків',rvlink:'Дивитися канал →',
+  ct_h:'Є задача<br>або хочеш<br><span>навчатись?</span>',ct_p:'Пиши — відповімо швидко.',
+  cl1:'Telegram — Андрій',cl2:'Telegram — Артем',
+  ph_n:"Ваше ім'я",ph_c:'Telegram або Email',ph_m:'Опишіть вашу задачу...',
+  ft0:'Тип запиту',ft1:'Розробка проекту',ft2:'Навчання',ft3:'Telegram-бот',ft4:'Інше',
+  fsub:'Відправити заявку',fc:'© 2025 — IT Studio & Academy',fb:'Андрій & Артем',
+}};
 
-let lang='uk';
-function setLang(l){
-  lang=l;
-  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.toLowerCase().includes(l==='uk'?'укр':l==='ru'?'рус':'eng')));
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    const k=el.getAttribute('data-i18n');
-    if(i18n[l][k]!==undefined) el.innerHTML=i18n[l][k];
-  });
-  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
-    const k=el.getAttribute('data-i18n-ph');
-    if(i18n[l][k]) el.placeholder=i18n[l][k];
-  });
-  document.getElementById('lsub').textContent=i18n[l].lsub||'Loading...';
-  document.documentElement.lang=l==='en'?'en':l;
+let L='en';
+function setL(l){
+  L=l;
+  document.querySelectorAll('.lb').forEach(b=>b.classList.toggle('on',b.classList.contains(l)));
+  document.querySelectorAll('[data-i]').forEach(el=>{const k=el.getAttribute('data-i');if(T[l][k]!=null)el.innerHTML=T[l][k];});
+  document.querySelectorAll('[data-i-ph]').forEach(el=>{const k=el.getAttribute('data-i-ph');if(T[l][k])el.placeholder=T[l][k];});
+  document.documentElement.lang=l;
 }
 
 /* LOADER */
-window.addEventListener('load',()=>setTimeout(()=>document.getElementById('loader').classList.add('out'),1800));
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('ldr').classList.add('gone'),1500));
 
 /* CURSOR */
-const cx=document.getElementById('cx'),cy=document.getElementById('cy');
-let mx=0,my=0,lx=0,ly=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
-(function loop(){lx+=(mx-lx)*.12;ly+=(my-ly)*.12;cx.style.left=mx+'px';cx.style.top=my+'px';cy.style.left=lx+'px';cy.style.top=ly+'px';requestAnimationFrame(loop);})();
-document.querySelectorAll('a,button,.chip,.ccard,.tcard,.pcard,.wcard,.svc-cat,.tcourse,.svc-item,.pricec,.ctag').forEach(el=>{
-  el.addEventListener('mouseenter',()=>document.body.classList.add('hc'));
-  el.addEventListener('mouseleave',()=>document.body.classList.remove('hc'));
+const dot=document.getElementById('dot'),ring=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button,.svc-r,.pc,.pcard,.rcard,.tcard,.course,.hstat,.coin').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hov'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hov'));
 });
 
-/* PARTICLES */
-const pc=document.getElementById('particles');
-for(let i=0;i<22;i++){
-  const p=document.createElement('div');
-  p.className='particle';
-  const left=Math.random()*100;
-  const dur=8+Math.random()*14;
-  const delay=Math.random()*10;
-  const dx=(Math.random()-0.5)*120;
-  p.style.cssText=`left:${left}%;--dx:${dx}px;animation-duration:${dur}s;animation-delay:${delay}s;`;
-  pc.appendChild(p);
-}
+/* NAV */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('stuck',scrollY>40));
 
-/* TYPED */
-const tEl=document.getElementById('tNova');
-tEl.style.cssText="font-family:'Bebas Neue',sans-serif;font-size:clamp(6rem,16vw,15rem);letter-spacing:-2px;color:var(--w);display:block;line-height:.86;text-shadow:0 0 100px rgba(200,0,11,.1);min-height:.9em;";
-const word='Nova';let wi=0;
-const bl=document.createElement('span');bl.innerHTML='|';bl.style.cssText='color:var(--r);animation:blk 1s infinite;';
-document.head.insertAdjacentHTML('beforeend','<style>@keyframes blk{0%,100%{opacity:1}50%{opacity:0}}</style>');
-tEl.appendChild(bl);
-const ti=setInterval(()=>{tEl.insertBefore(document.createTextNode(word[wi]),bl);wi++;if(wi>=word.length){clearInterval(ti);setTimeout(()=>bl.remove(),1500);}},115);
+/* REVEAL */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');}}),{threshold:.06});
+document.querySelectorAll('.reveal').forEach(e=>io.observe(e));
 
-/* SCROLL REVEAL */
-const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:.06});
-document.querySelectorAll('.fi').forEach(e=>obs.observe(e));
-
-/* STAGGER */
-document.querySelectorAll('.tcard,.pcard,.ccard,.wcard,.tcourse,.svc-cat,.pricec').forEach((e,i)=>{e.style.transitionDelay=(i*.09)+'s';});
+/* STAGGER on children */
+document.querySelectorAll('.price-cards .pc,.port-grid .pcard,.courses .course,.team-grid .tcard,.rev-grid .rcard,.svc-rows .svc-r').forEach((e,i)=>{
+  e.style.transitionDelay=(i*.07)+'s';
+});
 
 /* COUNTERS */
 document.querySelectorAll('[data-count]').forEach(el=>{
-  const t=+el.dataset.count;let c=0;
-  const iv=setInterval(()=>{c=Math.min(c+1,t);el.textContent=c;if(c>=t)clearInterval(iv);},55);
+  const target=+el.dataset.count;
+  const tick=()=>{const v=+el.textContent+1;el.textContent=v;if(v<target)setTimeout(tick,55);};
+  tick();
 });
 
-/* BARS */
-const bobs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.bfill').forEach(b=>b.classList.add('go'));bobs.unobserve(e.target);}});},{threshold:.15});
-const bel=document.getElementById('barsEl');if(bel)bobs.observe(bel);
-
-/* NAV */
-window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60));
-
 /* FORM */
-function submitForm(){
-  const name=document.getElementById('fname').value.trim();
-  const contact=document.getElementById('fcontact').value.trim();
-  const type=document.getElementById('ftype').value;
-  const msg=document.getElementById('fmsg').value.trim();
-  const labels={dev:'Разработка проекта',teach:'Обучение',bot:'Telegram-бот',other:'Другое'};
-  const inputs=[document.getElementById('fname'),document.getElementById('fcontact')];
-  inputs.forEach(el=>{el.style.borderColor='';el.style.boxShadow='';});
-  if(!name||!contact){
-    inputs.forEach(el=>{if(!el.value.trim()){el.style.borderColor='var(--r)';el.style.boxShadow='0 0 14px rgba(200,0,11,.35)';}});
+function doSend(){
+  const n=document.getElementById('fn').value.trim();
+  const c=document.getElementById('fc').value.trim();
+  const t=document.getElementById('ft').value;
+  const m=document.getElementById('fm').value.trim();
+  const lb={dev:'Project dev',teach:'Learning',bot:'Telegram bot',other:'Other'};
+  document.querySelectorAll('.f-input').forEach(el=>el.style.borderColor='');
+  if(!n||!c){
+    if(!n)document.getElementById('fn').style.borderColor='var(--r)';
+    if(!c)document.getElementById('fc').style.borderColor='var(--r)';
     return;
   }
-  const typeLabel=labels[type]||'Не указан';
-  const text=`🔴 Новая заявка — NovaCore\n\n👤 Имя: ${name}\n📬 Контакт: ${contact}\n📋 Тип: ${typeLabel}\n💬 Задача: ${msg||'—'}`;
-  window.open(`https://t.me/Dexter1938?text=${encodeURIComponent(text)}`,'_blank');
+  const txt=`🔴 New request — NovaCore\n\n👤 Name: ${n}\n📬 Contact: ${c}\n📋 Type: ${lb[t]||'—'}\n💬 Task: ${m||'—'}`;
+  window.open(`https://t.me/Dexter1938?text=${encodeURIComponent(txt)}`,'_blank');
 }
 
-setLang('ru');
+setL('en');
 </script>
 </body>
 </html>
