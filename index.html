@@ -28,7 +28,7 @@ body.hov #c2{width:40px;height:4px;border-color:var(--r);}
 
 /* ── LOADER ── */
 #ldr{position:fixed;inset:0;background:var(--bg);z-index:99999;display:flex;align-items:center;justify-content:center;transition:opacity .6s,visibility .6s;}
-#ldr.out{opacity:0;visibility:hidden;}
+#ldr.out{opacity:0;visibility:hidden;pointer-events:none;}
 .ldr-txt{font-family:'Bebas Neue',sans-serif;font-size:8vw;letter-spacing:4px;color:var(--w);overflow:hidden;display:flex;gap:0;}
 .ldr-txt span{display:inline-block;transform:translateY(110%);animation:lup .7s cubic-bezier(.16,1,.3,1) forwards;}
 .ldr-txt span:nth-child(1){animation-delay:.05s}
@@ -41,6 +41,8 @@ body.hov #c2{width:40px;height:4px;border-color:var(--r);}
 .ldr-txt span:nth-child(8){color:var(--r);animation-delay:.4s}
 @keyframes lup{to{transform:translateY(0)}}
 .ldr-sub{position:absolute;bottom:40px;font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:4px;color:var(--g);text-transform:uppercase;animation:fadeIn .5s .8s both;}
+.ldr-bar{position:absolute;bottom:0;left:0;height:2px;background:var(--r);animation:lbar 1.4s cubic-bezier(.4,0,.2,1) forwards;}
+@keyframes lbar{from{width:0}to{width:100%}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
 /* ── NAV ── */
@@ -77,10 +79,7 @@ nav.sc{background:rgba(6,6,6,.95);backdrop-filter:blur(16px);border-bottom:1px s
 
 /* ── HERO ── */
 #hero{min-height:100svh;padding:100px 48px 80px;display:grid;grid-template-rows:auto 1fr auto;position:relative;overflow:hidden;}
-
-/* scanlines texture */
 #hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,.012) 2px,rgba(255,255,255,.012) 4px);pointer-events:none;z-index:0;}
-
 .h-noise{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");pointer-events:none;opacity:.4;}
 .h-redglow{position:absolute;top:-200px;right:-200px;width:800px;height:800px;background:radial-gradient(circle,rgba(230,0,0,.07) 0%,transparent 65%);pointer-events:none;animation:rglow 8s ease-in-out infinite;}
 @keyframes rglow{0%,100%{transform:scale(1) translate(0,0);}50%{transform:scale(1.1) translate(-20px,20px);}}
@@ -93,12 +92,11 @@ nav.sc{background:rgba(6,6,6,.95);backdrop-filter:blur(16px);border-bottom:1px s
 .h-counter span{display:block;}
 
 .h-main{display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2;padding:20px 0;}
-
-/* BIG editorial title */
 .h-bigtitle{font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,16vw,17rem);line-height:.85;letter-spacing:2px;color:var(--w);position:relative;}
 .h-bigtitle .stroke{-webkit-text-stroke:1px rgba(255,255,255,.15);color:transparent;}
 .h-bigtitle .red{color:var(--r);position:relative;display:inline-block;}
-.h-bigtitle .red::after{content:attr(data-text);position:absolute;left:3px;top:3px;color:rgba(230,0,0,.25);z-index:-1;}/* glitch shadow */
+.h-bigtitle .red::after{content:attr(data-text);position:absolute;left:3px;top:3px;color:rgba(230,0,0,.25);z-index:-1;}
+.d-b{display:block;}
 
 .h-row2{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;margin-top:16px;}
 .h-desc{font-size:1rem;color:var(--w2);line-height:1.8;max-width:420px;font-weight:300;}
@@ -129,7 +127,7 @@ nav.sc{background:rgba(6,6,6,.95);backdrop-filter:blur(16px);border-bottom:1px s
 .sec-alt{background:var(--p1);}
 .sep{border-top:1px solid var(--b);}
 
-/* section header — editorial style */
+/* section header */
 .sh-wrap{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:64px;padding-bottom:24px;border-bottom:1px solid var(--b);}
 .sh-left .tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:3px;color:var(--r);text-transform:uppercase;opacity:.65;margin-bottom:10px;}
 .sh-left h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,6rem);letter-spacing:3px;color:var(--w);line-height:.9;}
@@ -268,11 +266,86 @@ footer{border-top:1px solid var(--b);padding:24px 48px;display:flex;justify-cont
 .f-logo span{color:var(--r);}
 footer .fm{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:1px;color:var(--g);}
 
-/* ── REVEAL ── */
-.rv-anim{opacity:0;transform:translateY(28px);transition:opacity .75s cubic-bezier(.16,1,.3,1),transform .75s cubic-bezier(.16,1,.3,1);}
+/* ════════ SCROLL ANIMATIONS ════════ */
+
+/* Base reveal */
+.rv-anim{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);}
 .rv-anim.in{opacity:1;transform:none;}
 
-/* ════════════════ MOBILE ════════════════ */
+/* Word split text */
+.split-word{overflow:hidden;display:inline-block;}
+.split-word .word{display:inline-block;transform:translateY(110%);opacity:0;transition:transform .8s cubic-bezier(.16,1,.3,1),opacity .8s cubic-bezier(.16,1,.3,1);}
+.split-word.in .word{transform:translateY(0);opacity:1;}
+
+/* Char split */
+.split-char .char{display:inline-block;transform:translateY(110%) rotate(8deg);opacity:0;transition:transform .6s cubic-bezier(.16,1,.3,1),opacity .4s ease;}
+.split-char.in .char{transform:translateY(0) rotate(0deg);opacity:1;}
+
+/* Lego drop — карточки падают сверху */
+.lego-drop{opacity:0;transform:translateY(-60px) scale(.95) rotate(-1deg);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);}
+.lego-drop.in{opacity:1;transform:translateY(0) scale(1) rotate(0deg);}
+
+/* Slide from left */
+.slide-left{opacity:0;transform:translateX(-50px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.slide-left.in{opacity:1;transform:translateX(0);}
+
+/* Slide from right */
+.slide-right{opacity:0;transform:translateX(50px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.slide-right.in{opacity:1;transform:translateX(0);}
+
+/* Scale up */
+.scale-up{opacity:0;transform:scale(.88);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.scale-up.in{opacity:1;transform:scale(1);}
+
+/* Blur in */
+.blur-in{opacity:0;filter:blur(10px);transform:translateY(20px);transition:opacity .9s ease,filter .9s ease,transform .9s cubic-bezier(.16,1,.3,1);}
+.blur-in.in{opacity:1;filter:blur(0);transform:translateY(0);}
+
+/* Line draw */
+.line-draw{transform:scaleX(0);transform-origin:left;transition:transform 1s cubic-bezier(.16,1,.3,1);}
+.line-draw.in{transform:scaleX(1);}
+
+/* Stagger delays */
+.d1{transition-delay:.05s!important}
+.d2{transition-delay:.12s!important}
+.d3{transition-delay:.19s!important}
+.d4{transition-delay:.26s!important}
+.d5{transition-delay:.33s!important}
+.d6{transition-delay:.40s!important}
+.d7{transition-delay:.47s!important}
+.d8{transition-delay:.54s!important}
+
+/* ── PARALLAX HERO ── */
+.h-bigtitle{will-change:transform;}
+
+/* ── GLITCH on hover ── */
+@keyframes glitch1{
+  0%,100%{clip-path:inset(0 0 95% 0);transform:translate(-3px,0);}
+  20%{clip-path:inset(30% 0 50% 0);transform:translate(3px,0);}
+  40%{clip-path:inset(60% 0 20% 0);transform:translate(-3px,0);}
+  60%{clip-path:inset(80% 0 5% 0);transform:translate(3px,0);}
+  80%{clip-path:inset(10% 0 80% 0);transform:translate(-3px,0);}
+}
+@keyframes glitch2{
+  0%,100%{clip-path:inset(80% 0 5% 0);transform:translate(3px,0);}
+  20%{clip-path:inset(0 0 90% 0);transform:translate(-3px,0);}
+  40%{clip-path:inset(40% 0 40% 0);transform:translate(3px,0);}
+  60%{clip-path:inset(70% 0 10% 0);transform:translate(-3px,0);}
+  80%{clip-path:inset(20% 0 70% 0);transform:translate(3px,0);}
+}
+.glitch-wrap{position:relative;display:inline-block;}
+.glitch-wrap::before,.glitch-wrap::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;}
+.glitch-wrap:hover::before{opacity:.8;color:#ff2200;animation:glitch1 .3s steps(1) infinite;}
+.glitch-wrap:hover::after{opacity:.8;color:#0099ff;animation:glitch2 .3s steps(1) infinite;}
+
+/* ── NUMBER TICKER ── */
+.ticker{display:inline-block;transition:all .1s;}
+
+/* ── PROGRESS BARS in services ── */
+.svc-bar{position:absolute;bottom:0;left:0;height:1px;background:var(--r);width:0;transition:width .6s cubic-bezier(.16,1,.3,1);}
+.svc-item:hover .svc-bar{width:100%;}
+
+/* ── MOBILE ── */
 @media(max-width:768px){
   nav{padding:0 18px;height:56px;}
   .nlinks{display:none;}
@@ -327,8 +400,9 @@ footer .fm{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacin
   .ct-big{font-size:clamp(3rem,12vw,4.5rem);}
 
   footer{padding:18px;flex-direction:column;text-align:center;gap:7px;}
-
   .crypto-bar{padding:16px;gap:12px;}
+
+  .lego-drop{transform:translateY(-30px) scale(.97);}
 }
 @media(max-width:400px){
   .h-bigtitle{font-size:clamp(3.2rem,16vw,5.5rem);}
@@ -343,6 +417,7 @@ footer .fm{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacin
 <div id="ldr">
   <div class="ldr-txt"><span>N</span><span>o</span><span>v</span><span>a</span><span>C</span><span>o</span><span>r</span><span>e</span></div>
   <div class="ldr-sub">IT Studio & Academy</div>
+  <div class="ldr-bar"></div>
 </div>
 <div id="c1"></div><div id="c2"></div>
 
@@ -391,14 +466,14 @@ footer .fm{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacin
   </div>
 
   <div class="h-main">
-    <div class="h-bigtitle">
-      <span class="d-b" data-i="h1a">We</span>
-      <span class="d-b red" data-text="Build" data-i="h1b">Build</span>
-      <span class="d-b stroke" data-i="h1c">Digital</span>
+    <div class="h-bigtitle" id="heroTitle">
+      <span class="d-b split-char" data-i="h1a">We</span>
+      <span class="d-b red split-char" data-text="Build" data-i="h1b">Build</span>
+      <span class="d-b stroke split-char" data-i="h1c">Digital</span>
     </div>
     <div class="h-row2">
-      <p class="h-desc" data-i="hsub">IT studio & coding academy by two 15-year-olds.<br><strong>Real code. Real products.</strong> IT taught the right way.</p>
-      <div class="h-actions">
+      <p class="h-desc blur-in" data-i="hsub">IT studio & coding academy by two 15-year-olds.<br><strong>Real code. Real products.</strong> IT taught the right way.</p>
+      <div class="h-actions blur-in" style="transition-delay:.2s">
         <a href="#services" class="h-btn1" data-i="hb1">Our services <span class="arr">→</span></a>
         <a href="#academy" class="h-btn2" data-i="hb2">Learn to code</a>
       </div>
@@ -407,9 +482,9 @@ footer .fm{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacin
 
   <div class="h-bottom">
     <div class="h-stats">
-      <div class="hst"><div class="hst-v" data-count="2">0</div><div class="hst-l" data-i="hs1">founders</div></div>
-      <div class="hst"><div class="hst-v" data-count="15">0</div><div class="hst-l" data-i="hs2">years old each</div></div>
-      <div class="hst"><div class="hst-v">∞</div><div class="hst-l" data-i="hs3">possibilities</div></div>
+      <div class="hst lego-drop d1"><div class="hst-v" data-count="2">0</div><div class="hst-l" data-i="hs1">founders</div></div>
+      <div class="hst lego-drop d2"><div class="hst-v" data-count="15">0</div><div class="hst-l" data-i="hs2">years old each</div></div>
+      <div class="hst lego-drop d3"><div class="hst-v">∞</div><div class="hst-l" data-i="hs3">possibilities</div></div>
     </div>
     <div class="h-scroll" data-i="hscroll">Scroll down</div>
   </div>
@@ -421,15 +496,15 @@ footer .fm{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacin
     <div class="sh-left"><div class="tag" data-i="s_tag">// 01 — Services</div><h2 data-i="s_h">What We<br>Build</h2></div>
     <p class="sh-right" data-i="s_sub">Full IT stack — from idea to production. We don't just write code, we engineer solutions.</p>
   </div>
-  <div class="svc-list rv-anim">
-    <div class="svc-item"><span class="svc-num">01</span><div class="svc-name" data-i="sv1">Web Development</div><div class="svc-chips"><span class="chip">Landing Page</span><span class="chip">SPA / React</span><span class="chip">Corporate</span><span class="chip">Portfolio</span><span class="chip">Responsive</span><span class="chip">SEO</span></div><span class="svc-arr">→</span></div>
-    <div class="svc-item"><span class="svc-num">02</span><div class="svc-name">Backend & API</div><div class="svc-chips"><span class="chip">Python / Flask</span><span class="chip">Node.js</span><span class="chip">REST API</span><span class="chip">PostgreSQL</span><span class="chip">MongoDB</span><span class="chip">JWT</span></div><span class="svc-arr">→</span></div>
-    <div class="svc-item"><span class="svc-num">03</span><div class="svc-name" data-i="sv3">Telegram & Discord Bots</div><div class="svc-chips"><span class="chip">Telegram Bot</span><span class="chip">Discord Bot</span><span class="chip">Auto-posting</span><span class="chip">Shop Bot</span><span class="chip">Notifications</span></div><span class="svc-arr">→</span></div>
-    <div class="svc-item"><span class="svc-num">04</span><div class="svc-name" data-i="sv4">Python & Automation</div><div class="svc-chips"><span class="chip">Scripts</span><span class="chip">Parsing</span><span class="chip">Pandas</span><span class="chip">Excel / CSV</span><span class="chip">Task Automation</span></div><span class="svc-arr">→</span></div>
-    <div class="svc-item"><span class="svc-num">05</span><div class="svc-name" data-i="sv5">UI/UX & Design</div><div class="svc-chips"><span class="chip">Figma</span><span class="chip">Prototypes</span><span class="chip">Branding</span><span class="chip">Logo</span><span class="chip">Design System</span></div><span class="svc-arr">→</span></div>
-    <div class="svc-item"><span class="svc-num">06</span><div class="svc-name" data-i="sv6">Data & Analytics</div><div class="svc-chips"><span class="chip">Dashboards</span><span class="chip">Visualization</span><span class="chip">Reports</span><span class="chip">Charts</span></div><span class="svc-arr">→</span></div>
-    <div class="svc-item"><span class="svc-num">07</span><div class="svc-name" data-i="sv7">Cybersecurity</div><div class="svc-chips"><span class="chip">Audit</span><span class="chip">SQL Injection</span><span class="chip">XSS Protection</span><span class="chip">HTTPS / SSL</span></div><span class="svc-arr">→</span></div>
-    <div class="svc-item"><span class="svc-num">08</span><div class="svc-name" data-i="sv8">Deploy & DevOps</div><div class="svc-chips"><span class="chip">GitHub Pages</span><span class="chip">Vercel</span><span class="chip">Docker</span><span class="chip">VPS</span><span class="chip">CI/CD</span></div><span class="svc-arr">→</span></div>
+  <div class="svc-list">
+    <div class="svc-item slide-left d1"><div class="svc-bar"></div><span class="svc-num">01</span><div class="svc-name" data-i="sv1">Web Development</div><div class="svc-chips"><span class="chip">Landing Page</span><span class="chip">SPA / React</span><span class="chip">Corporate</span><span class="chip">Portfolio</span><span class="chip">Responsive</span><span class="chip">SEO</span></div><span class="svc-arr">→</span></div>
+    <div class="svc-item slide-left d2"><div class="svc-bar"></div><span class="svc-num">02</span><div class="svc-name">Backend & API</div><div class="svc-chips"><span class="chip">Python / Flask</span><span class="chip">Node.js</span><span class="chip">REST API</span><span class="chip">PostgreSQL</span><span class="chip">MongoDB</span><span class="chip">JWT</span></div><span class="svc-arr">→</span></div>
+    <div class="svc-item slide-left d3"><div class="svc-bar"></div><span class="svc-num">03</span><div class="svc-name" data-i="sv3">Telegram & Discord Bots</div><div class="svc-chips"><span class="chip">Telegram Bot</span><span class="chip">Discord Bot</span><span class="chip">Auto-posting</span><span class="chip">Shop Bot</span><span class="chip">Notifications</span></div><span class="svc-arr">→</span></div>
+    <div class="svc-item slide-left d4"><div class="svc-bar"></div><span class="svc-num">04</span><div class="svc-name" data-i="sv4">Python & Automation</div><div class="svc-chips"><span class="chip">Scripts</span><span class="chip">Parsing</span><span class="chip">Pandas</span><span class="chip">Excel / CSV</span><span class="chip">Task Automation</span></div><span class="svc-arr">→</span></div>
+    <div class="svc-item slide-left d5"><div class="svc-bar"></div><span class="svc-num">05</span><div class="svc-name" data-i="sv5">UI/UX & Design</div><div class="svc-chips"><span class="chip">Figma</span><span class="chip">Prototypes</span><span class="chip">Branding</span><span class="chip">Logo</span><span class="chip">Design System</span></div><span class="svc-arr">→</span></div>
+    <div class="svc-item slide-left d6"><div class="svc-bar"></div><span class="svc-num">06</span><div class="svc-name" data-i="sv6">Data & Analytics</div><div class="svc-chips"><span class="chip">Dashboards</span><span class="chip">Visualization</span><span class="chip">Reports</span><span class="chip">Charts</span></div><span class="svc-arr">→</span></div>
+    <div class="svc-item slide-left d7"><div class="svc-bar"></div><span class="svc-num">07</span><div class="svc-name" data-i="sv7">Cybersecurity</div><div class="svc-chips"><span class="chip">Audit</span><span class="chip">SQL Injection</span><span class="chip">XSS Protection</span><span class="chip">HTTPS / SSL</span></div><span class="svc-arr">→</span></div>
+    <div class="svc-item slide-left d8"><div class="svc-bar"></div><span class="svc-num">08</span><div class="svc-name" data-i="sv8">Deploy & DevOps</div><div class="svc-chips"><span class="chip">GitHub Pages</span><span class="chip">Vercel</span><span class="chip">Docker</span><span class="chip">VPS</span><span class="chip">CI/CD</span></div><span class="svc-arr">→</span></div>
   </div>
 </section>
 
@@ -439,15 +514,15 @@ footer .fm{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacin
     <div class="sh-left"><div class="tag" data-i="pr_tag">// 02 — Pricing</div><h2 data-i="pr_h">Transparent<br>Pricing</h2></div>
     <p class="sh-right" data-i="pr_sub">No hidden fees. No surprises. Pay in USD or crypto.</p>
   </div>
-  <div class="price-wrap rv-anim">
-    <div class="pc">
+  <div class="price-wrap">
+    <div class="pc lego-drop d1">
       <div class="pc-name" data-i="p1n">Starter</div>
       <p class="pc-desc" data-i="p1d">Fast and straight to the point.</p>
       <div><span class="pc-amt">$30</span><span class="pc-rng"> — $80</span></div>
       <ul class="pc-feats"><li data-i="p1f1">Landing page / simple site</li><li data-i="p1f2">Basic Telegram bot</li><li data-i="p1f3">Python script / parser</li><li data-i="p1f4">Timeline: 1–4 days</li><li data-i="p1f5">1 revision round</li></ul>
       <a href="#contact" class="pc-btn" data-i="pbtn">Order now</a>
     </div>
-    <div class="pc hot">
+    <div class="pc hot lego-drop d2">
       <div class="pc-badge" data-i="popular">★ Most popular</div>
       <div class="pc-name" data-i="p2n">Pro</div>
       <p class="pc-desc" data-i="p2d">Full project with design & support.</p>
@@ -455,7 +530,7 @@ footer .fm{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacin
       <ul class="pc-feats"><li data-i="p2f1">Multi-page site or SPA</li><li data-i="p2f2">Backend + API + DB</li><li data-i="p2f3">UI/UX in Figma</li><li data-i="p2f4">Timeline: 7–14 days</li><li data-i="p2f5">Unlimited revisions</li><li data-i="p2f6">30-day support</li></ul>
       <a href="#contact" class="pc-btn" data-i="pbtn">Order now</a>
     </div>
-    <div class="pc">
+    <div class="pc lego-drop d3">
       <div class="pc-name" data-i="p3n">Studio</div>
       <p class="pc-desc" data-i="p3d">Complex turnkey project.</p>
       <div><span class="pc-amt">$300</span><span class="pc-rng">+</span></div>
@@ -479,11 +554,11 @@ footer .fm{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacin
     <div class="sh-left"><div class="tag" data-i="po_tag">// 03 — Portfolio</div><h2 data-i="po_h">Our<br>Work</h2></div>
     <p class="sh-right" data-i="po_sub">Real projects — live code, shipped products.</p>
   </div>
-  <div class="port-grid rv-anim">
-    <div class="pj"><div class="pj-top"><div class="pj-top-glow" style="background:radial-gradient(circle,rgba(230,0,0,.1),transparent 68%);"></div><div class="pj-ico">🌐</div><div class="pj-tag live">● LIVE</div></div><div class="pj-body"><div class="pj-n">NC — 001</div><div class="pj-title">NovaCore Studio</div><p class="pj-desc" data-i="pj1d">This website — custom design, 3 languages, animated hero, contact form. Built from scratch, no frameworks.</p><div class="pj-stack"><span class="pj-stag">HTML</span><span class="pj-stag">CSS</span><span class="pj-stag">JavaScript</span><span class="pj-stag">i18n</span></div><a href="https://ahefh.github.io/NovaCore/" target="_blank" class="pj-link" data-i="pjopen">View site →</a></div></div>
-    <div class="pj"><div class="pj-top"><div class="pj-top-glow" style="background:radial-gradient(circle,rgba(0,180,80,.08),transparent 68%);"></div><div class="pj-ico">🤖</div><div class="pj-tag live">● LIVE</div></div><div class="pj-body"><div class="pj-n">NC — 002</div><div class="pj-title">Telegram Bot</div><p class="pj-desc" data-i="pj2d">Custom client bot — auto responses, commands, API integration. Delivered in 2 days.</p><div class="pj-stack"><span class="pj-stag">Python</span><span class="pj-stag">aiogram</span><span class="pj-stag">REST API</span></div><a href="https://t.me/Dexter1938" target="_blank" class="pj-link" data-i="pjchat">Contact →</a></div></div>
-    <div class="pj"><div class="pj-top"><div class="pj-top-glow" style="background:radial-gradient(circle,rgba(80,100,255,.08),transparent 68%);"></div><div class="pj-ico">⚙️</div><div class="pj-tag live">● LIVE</div></div><div class="pj-body"><div class="pj-n">NC — 003</div><div class="pj-title">Python Automation</div><p class="pj-desc" data-i="pj3d">Automation scripts for real clients. Parsing, data processing, scheduled tasks. Saves hours per week.</p><div class="pj-stack"><span class="pj-stag">Python</span><span class="pj-stag">Pandas</span><span class="pj-stag">Automation</span></div><a href="https://t.me/Dexter1938" target="_blank" class="pj-link" data-i="pjchat">Contact →</a></div></div>
-    <div class="pj"><div class="pj-top"><div class="pj-top-glow" style="background:radial-gradient(circle,rgba(255,160,0,.07),transparent 68%);"></div><div class="pj-ico">⚡</div><div class="pj-tag wip">◐ WIP</div></div><div class="pj-body"><div class="pj-n">NC — 004</div><div class="pj-title" data-i="pj4t">Next Project</div><p class="pj-desc" data-i="pj4d">Already in development. Follow us for updates.</p><div class="pj-stack"><span class="pj-stag">Coming soon</span></div><a href="https://t.me/Dexter1938" target="_blank" class="pj-link" data-i="pjfollow">Follow →</a></div></div>
+  <div class="port-grid">
+    <div class="pj lego-drop d1"><div class="pj-top"><div class="pj-top-glow" style="background:radial-gradient(circle,rgba(230,0,0,.1),transparent 68%);"></div><div class="pj-ico">🌐</div><div class="pj-tag live">● LIVE</div></div><div class="pj-body"><div class="pj-n">NC — 001</div><div class="pj-title">NovaCore Studio</div><p class="pj-desc" data-i="pj1d">This website — custom design, 3 languages, animated hero, contact form. Built from scratch, no frameworks.</p><div class="pj-stack"><span class="pj-stag">HTML</span><span class="pj-stag">CSS</span><span class="pj-stag">JavaScript</span><span class="pj-stag">i18n</span></div><a href="https://ahefh.github.io/NovaCore/" target="_blank" class="pj-link" data-i="pjopen">View site →</a></div></div>
+    <div class="pj lego-drop d2"><div class="pj-top"><div class="pj-top-glow" style="background:radial-gradient(circle,rgba(0,180,80,.08),transparent 68%);"></div><div class="pj-ico">🤖</div><div class="pj-tag live">● LIVE</div></div><div class="pj-body"><div class="pj-n">NC — 002</div><div class="pj-title">Telegram Bot</div><p class="pj-desc" data-i="pj2d">Custom client bot — auto responses, commands, API integration. Delivered in 2 days.</p><div class="pj-stack"><span class="pj-stag">Python</span><span class="pj-stag">aiogram</span><span class="pj-stag">REST API</span></div><a href="https://t.me/Dexter1938" target="_blank" class="pj-link" data-i="pjchat">Contact →</a></div></div>
+    <div class="pj lego-drop d3"><div class="pj-top"><div class="pj-top-glow" style="background:radial-gradient(circle,rgba(80,100,255,.08),transparent 68%);"></div><div class="pj-ico">⚙️</div><div class="pj-tag live">● LIVE</div></div><div class="pj-body"><div class="pj-n">NC — 003</div><div class="pj-title">Python Automation</div><p class="pj-desc" data-i="pj3d">Automation scripts for real clients. Parsing, data processing, scheduled tasks. Saves hours per week.</p><div class="pj-stack"><span class="pj-stag">Python</span><span class="pj-stag">Pandas</span><span class="pj-stag">Automation</span></div><a href="https://t.me/Dexter1938" target="_blank" class="pj-link" data-i="pjchat">Contact →</a></div></div>
+    <div class="pj lego-drop d4"><div class="pj-top"><div class="pj-top-glow" style="background:radial-gradient(circle,rgba(255,160,0,.07),transparent 68%);"></div><div class="pj-ico">⚡</div><div class="pj-tag wip">◐ WIP</div></div><div class="pj-body"><div class="pj-n">NC — 004</div><div class="pj-title" data-i="pj4t">Next Project</div><p class="pj-desc" data-i="pj4d">Already in development. Follow us for updates.</p><div class="pj-stack"><span class="pj-stag">Coming soon</span></div><a href="https://t.me/Dexter1938" target="_blank" class="pj-link" data-i="pjfollow">Follow →</a></div></div>
   </div>
 </section>
 
@@ -497,13 +572,13 @@ footer .fm{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacin
     <div class="acad-big" data-i="ac_big">Zero boring theory.<br>100% <span>real code.</span></div>
     <div><p class="acad-p" data-i="ac_p1">Every lesson ends with a <strong>working result</strong>, not just notes.</p><p class="acad-p" data-i="ac_p2">After each module — a <strong>real project in your GitHub</strong>. Not a certificate. A live product.</p></div>
   </div>
-  <div class="courses rv-anim">
-    <div class="course"><div class="c-ico">🚀</div><div class="c-lv" data-i="lv0">From scratch</div><div class="c-name" data-i="c1t">Programming Basics</div><p class="c-desc" data-i="c1d">First working program — in lesson one.</p><div class="c-price">$3<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">Python</span><span class="c-tag">Logic</span></div></div>
-    <div class="course"><div class="c-ico">🌐</div><div class="c-lv" data-i="lv1">Beginner</div><div class="c-name" data-i="c2t">Web from scratch</div><p class="c-desc" data-i="c2d">HTML, CSS, JS. Site is live at the end.</p><div class="c-price">$3<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">HTML</span><span class="c-tag">CSS</span><span class="c-tag">JS</span></div></div>
-    <div class="course"><div class="c-ico">🐍</div><div class="c-lv" data-i="lv1">Beginner</div><div class="c-name" data-i="c3t">Python from scratch</div><p class="c-desc" data-i="c3d">Scripts, automation, OOP. Zero fluff.</p><div class="c-price">$3<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">Python</span><span class="c-tag">OOP</span></div></div>
-    <div class="course"><div class="c-ico">🤖</div><div class="c-lv" data-i="lv1p">Beginner+</div><div class="c-name" data-i="c4t">Bots & Automation</div><p class="c-desc" data-i="c4d">Every lesson = working bot.</p><div class="c-price">$4<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">Telegram</span><span class="c-tag">API</span></div></div>
-    <div class="course"><div class="c-ico">⚛️</div><div class="c-lv" data-i="lvm">Intermediate</div><div class="c-name" data-i="c5t">React & Frontend Pro</div><p class="c-desc" data-i="c5d">Skills that actually get you hired.</p><div class="c-price">$5<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">React</span><span class="c-tag">TypeScript</span></div></div>
-    <div class="course"><div class="c-ico">🗄️</div><div class="c-lv" data-i="lvm">Intermediate</div><div class="c-name" data-i="c6t">Databases & Backend</div><p class="c-desc" data-i="c6d">SQL, REST API. Understand the server — understand the web.</p><div class="c-price">$5<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">SQL</span><span class="c-tag">FastAPI</span></div></div>
+  <div class="courses">
+    <div class="course lego-drop d1"><div class="c-ico">🚀</div><div class="c-lv" data-i="lv0">From scratch</div><div class="c-name" data-i="c1t">Programming Basics</div><p class="c-desc" data-i="c1d">First working program — in lesson one.</p><div class="c-price">$3<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">Python</span><span class="c-tag">Logic</span></div></div>
+    <div class="course lego-drop d2"><div class="c-ico">🌐</div><div class="c-lv" data-i="lv1">Beginner</div><div class="c-name" data-i="c2t">Web from scratch</div><p class="c-desc" data-i="c2d">HTML, CSS, JS. Site is live at the end.</p><div class="c-price">$3<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">HTML</span><span class="c-tag">CSS</span><span class="c-tag">JS</span></div></div>
+    <div class="course lego-drop d3"><div class="c-ico">🐍</div><div class="c-lv" data-i="lv1">Beginner</div><div class="c-name" data-i="c3t">Python from scratch</div><p class="c-desc" data-i="c3d">Scripts, automation, OOP. Zero fluff.</p><div class="c-price">$3<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">Python</span><span class="c-tag">OOP</span></div></div>
+    <div class="course lego-drop d4"><div class="c-ico">🤖</div><div class="c-lv" data-i="lv1p">Beginner+</div><div class="c-name" data-i="c4t">Bots & Automation</div><p class="c-desc" data-i="c4d">Every lesson = working bot.</p><div class="c-price">$4<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">Telegram</span><span class="c-tag">API</span></div></div>
+    <div class="course lego-drop d5"><div class="c-ico">⚛️</div><div class="c-lv" data-i="lvm">Intermediate</div><div class="c-name" data-i="c5t">React & Frontend Pro</div><p class="c-desc" data-i="c5d">Skills that actually get you hired.</p><div class="c-price">$5<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">React</span><span class="c-tag">TypeScript</span></div></div>
+    <div class="course lego-drop d6"><div class="c-ico">🗄️</div><div class="c-lv" data-i="lvm">Intermediate</div><div class="c-name" data-i="c6t">Databases & Backend</div><p class="c-desc" data-i="c6d">SQL, REST API. Understand the server — understand the web.</p><div class="c-price">$5<span data-i="pl"> / lesson</span></div><div class="c-tags"><span class="c-tag">SQL</span><span class="c-tag">FastAPI</span></div></div>
   </div>
 </section>
 
@@ -513,10 +588,10 @@ footer .fm{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacin
     <div class="sh-left"><div class="tag" data-i="tm_tag">// 05 — Team</div><h2 data-i="tm_h">The<br>Founders</h2></div>
     <p class="sh-right" data-i="tm_sub">Two people — one machine.</p>
   </div>
-  <div class="team-grid rv-anim">
-    <div class="tm"><div class="tm-num">01</div><div class="tm-av">AN</div><div class="tm-name">Andrey</div><div class="tm-role" data-i="an_r">Founder & Lead Dev · 15 y.o.</div><p class="tm-desc" data-i="an_d">Chief architect of NovaCore. Frontend, Python, education. If there's a problem — already building the solution.</p><div class="tm-tags"><span class="tm-tag">Lead Dev</span><span class="tm-tag">Frontend</span><span class="tm-tag">Python</span><span class="tm-tag">Mentor</span></div></div>
-    <div class="tm"><div class="tm-num">02</div><div class="tm-av">AR</div><div class="tm-name">Artem</div><div class="tm-role" data-i="ar_r">Co-Founder & Dev · 15 y.o.</div><p class="tm-desc" data-i="ar_d">Right hand of the studio. From first commit to final deploy. Reliable, precise, results-driven.</p><div class="tm-tags"><span class="tm-tag">Co-Founder</span><span class="tm-tag">Backend</span><span class="tm-tag">QA</span><span class="tm-tag">Mentor</span></div></div>
-    <div class="tm tm-empty"><div class="tm-num">?</div><div class="tm-av" style="opacity:.15">??</div><div class="tm-name" data-i="sl_n">Position open</div><div class="tm-role" data-i="sl_r">NovaCore is growing</div><p class="tm-desc" data-i="sl_d">If you can code and want to build real things — this spot might be yours.</p></div>
+  <div class="team-grid">
+    <div class="tm lego-drop d1"><div class="tm-num">01</div><div class="tm-av">AN</div><div class="tm-name">Andrey</div><div class="tm-role" data-i="an_r">Founder & Lead Dev · 15 y.o.</div><p class="tm-desc" data-i="an_d">Chief architect of NovaCore. Frontend, Python, education. If there's a problem — already building the solution.</p><div class="tm-tags"><span class="tm-tag">Lead Dev</span><span class="tm-tag">Frontend</span><span class="tm-tag">Python</span><span class="tm-tag">Mentor</span></div></div>
+    <div class="tm lego-drop d2"><div class="tm-num">02</div><div class="tm-av">AR</div><div class="tm-name">Artem</div><div class="tm-role" data-i="ar_r">Co-Founder & Dev · 15 y.o.</div><p class="tm-desc" data-i="ar_d">Right hand of the studio. From first commit to final deploy. Reliable, precise, results-driven.</p><div class="tm-tags"><span class="tm-tag">Co-Founder</span><span class="tm-tag">Backend</span><span class="tm-tag">QA</span><span class="tm-tag">Mentor</span></div></div>
+    <div class="tm tm-empty lego-drop d3"><div class="tm-num">?</div><div class="tm-av" style="opacity:.15">??</div><div class="tm-name" data-i="sl_n">Position open</div><div class="tm-role" data-i="sl_r">NovaCore is growing</div><p class="tm-desc" data-i="sl_d">If you can code and want to build real things — this spot might be yours.</p></div>
   </div>
 </section>
 
@@ -526,11 +601,11 @@ footer .fm{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacin
     <div class="sh-left"><div class="tag" data-i="rv_tag">// 06 — Reviews</div><h2 data-i="rv_h">What People<br>Say</h2></div>
     <p class="sh-right" data-i="rv_sub">Real words from real people.</p>
   </div>
-  <div class="rev-grid rv-anim">
-    <div class="rv"><div class="rv-stars">★★★★★</div><span class="rv-q">"</span><p class="rv-text">"Ordered a landing page — fast, clean, exactly what I asked. Site works perfectly."</p><div class="rv-auth"><div class="rv-av">MX</div><div><div class="rv-name">Maxim</div><div class="rv-role" data-i="rv1r">Landing page client</div></div></div></div>
-    <div class="rv"><div class="rv-stars">★★★★★</div><span class="rv-q">"</span><p class="rv-text">"Andrey helped me understand Python in 3 lessons. Already wrote my first automation script."</p><div class="rv-auth"><div class="rv-av">DN</div><div><div class="rv-name">Denis</div><div class="rv-role" data-i="rv2r">Student — Python from scratch</div></div></div></div>
-    <div class="rv"><div class="rv-stars">★★★★★</div><span class="rv-q">"</span><p class="rv-text">"Got a Telegram bot in 2 days. Stable, clean code — checked it myself. These guys really know what they're doing."</p><div class="rv-auth"><div class="rv-av">IL</div><div><div class="rv-name">Ilya</div><div class="rv-role" data-i="rv3r">Telegram bot client</div></div></div></div>
-    <div class="rv"><div class="rv-stars" style="color:#29b5e8;letter-spacing:2px;font-size:.78rem;">✓ TELEGRAM VERIFIED</div><span class="rv-q" style="color:rgba(41,181,232,.08)">"</span><p class="rv-text">"2 times and both went perfectly 😎" — real reviews in our Telegram channel. 8+ reviews total.</p><div class="rv-auth"><div class="rv-av" style="background:linear-gradient(135deg,#003d5c,#0077a8);color:#29b5e8;border-color:rgba(41,181,232,.2);">TG</div><div><div class="rv-name" data-i="rv4n">8+ reviews</div><div class="rv-role">Dexter | Reviews</div></div></div><a href="https://t.me/Dexter1938" target="_blank" class="rv-link" data-i="rvlink">View channel →</a></div>
+  <div class="rev-grid">
+    <div class="rv scale-up d1"><div class="rv-stars">★★★★★</div><span class="rv-q">"</span><p class="rv-text">"Ordered a landing page — fast, clean, exactly what I asked. Site works perfectly."</p><div class="rv-auth"><div class="rv-av">MX</div><div><div class="rv-name">Maxim</div><div class="rv-role" data-i="rv1r">Landing page client</div></div></div></div>
+    <div class="rv scale-up d2"><div class="rv-stars">★★★★★</div><span class="rv-q">"</span><p class="rv-text">"Andrey helped me understand Python in 3 lessons. Already wrote my first automation script."</p><div class="rv-auth"><div class="rv-av">DN</div><div><div class="rv-name">Denis</div><div class="rv-role" data-i="rv2r">Student — Python from scratch</div></div></div></div>
+    <div class="rv scale-up d3"><div class="rv-stars">★★★★★</div><span class="rv-q">"</span><p class="rv-text">"Got a Telegram bot in 2 days. Stable, clean code — checked it myself. These guys really know what they're doing."</p><div class="rv-auth"><div class="rv-av">IL</div><div><div class="rv-name">Ilya</div><div class="rv-role" data-i="rv3r">Telegram bot client</div></div></div></div>
+    <div class="rv scale-up d4"><div class="rv-stars" style="color:#29b5e8;letter-spacing:2px;font-size:.78rem;">✓ TELEGRAM VERIFIED</div><span class="rv-q" style="color:rgba(41,181,232,.08)">"</span><p class="rv-text">"2 times and both went perfectly 😎" — real reviews in our Telegram channel. 8+ reviews total.</p><div class="rv-auth"><div class="rv-av" style="background:linear-gradient(135deg,#003d5c,#0077a8);color:#29b5e8;border-color:rgba(41,181,232,.2);">TG</div><div><div class="rv-name" data-i="rv4n">8+ reviews</div><div class="rv-role">Dexter | Reviews</div></div></div><a href="https://t.me/Dexter1938" target="_blank" class="rv-link" data-i="rvlink">View channel →</a></div>
   </div>
 </section>
 
@@ -565,13 +640,14 @@ footer .fm{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacin
 
 <footer>
   <div class="f-logo">Nova<span>Core</span></div>
-  <span class="fm" data-i="fc">© 2025 — IT Studio & Academy</span>
+  <span class="fm" data-i="fc2">© 2025 — IT Studio & Academy</span>
   <span class="fm" data-i="fb">Andrey & Artem</span>
 </footer>
 
-<style>.d-b{display:block;}</style>
 <script>
-/* ═══ i18n ═══ */
+/* ═══════════════════════════════════════
+   i18n
+═══════════════════════════════════════ */
 const T={
 en:{n1:'Services',n2:'Pricing',n3:'Portfolio',n4:'Academy',n5:'Team',n6:'Contact',ncta:'Get in touch',
 badge:'Open for projects & students',hc1:'IT Studio',
@@ -612,7 +688,7 @@ ct_h:'Have a<br>project or<br>want to <span>learn?</span>',ct_p:"Write to us —
 cl1:'Telegram — Andrey',cl2:'Telegram — Artem',
 ph_n:'Your name',ph_c:'Telegram or Email',ph_m:'Describe your task...',
 ft0:'Request type',ft1:'Project development',ft2:'Learning / tutoring',ft3:'Telegram bot',ft4:'Other',
-fsub:'Send request',fc:'© 2025 — IT Studio & Academy',fb:'Andrey & Artem'},
+fsub:'Send request',fc2:'© 2025 — IT Studio & Academy',fb:'Andrey & Artem'},
 ru:{n1:'Услуги',n2:'Цены',n3:'Портфолио',n4:'Академия',n5:'Команда',n6:'Контакт',ncta:'Связаться',
 badge:'Открыты для проектов и учеников',hc1:'IT Студия',
 h1a:'Мы',h1b:'Строим',h1c:'Digital',
@@ -652,7 +728,7 @@ ct_h:'Есть задача<br>или хочешь<br><span>учиться?</spa
 cl1:'Telegram — Андрей',cl2:'Telegram — Артем',
 ph_n:'Ваше имя',ph_c:'Telegram или Email',ph_m:'Опишите задачу...',
 ft0:'Тип запроса',ft1:'Разработка проекта',ft2:'Обучение',ft3:'Telegram-бот',ft4:'Другое',
-fsub:'Отправить заявку',fc:'© 2025 — IT Studio & Academy',fb:'Андрей & Артем'},
+fsub:'Отправить заявку',fc2:'© 2025 — IT Studio & Academy',fb:'Андрей & Артем'},
 uk:{n1:'Послуги',n2:'Ціни',n3:'Портфоліо',n4:'Академія',n5:'Команда',n6:'Контакт',ncta:"Зв'язатись",
 badge:'Відкриті для проектів та учнів',hc1:'IT Студія',
 h1a:'Ми',h1b:'Будуємо',h1c:'Digital',
@@ -691,21 +767,88 @@ ct_h:'Є задача<br>або хочеш<br><span>навчатись?</span>',
 cl1:'Telegram — Андрій',cl2:'Telegram — Артем',
 ph_n:"Ваше ім'я",ph_c:'Telegram або Email',ph_m:'Опишіть задачу...',
 ft0:'Тип запиту',ft1:'Розробка проекту',ft2:'Навчання',ft3:'Telegram-бот',ft4:'Інше',
-fsub:'Відправити заявку',fc:'© 2025 — IT Studio & Academy',fb:'Андрій & Артем'}};
+fsub:'Відправити заявку',fc2:'© 2025 — IT Studio & Academy',fb:'Андрій & Артем'}};
 
 let L='en';
 function setL(l){
   L=l;
   document.querySelectorAll('.lb').forEach(b=>b.classList.toggle('on',b.classList.contains(l)));
-  document.querySelectorAll('[data-i]').forEach(el=>{const k=el.getAttribute('data-i');if(T[l][k]!=null)el.innerHTML=T[l][k];});
-  document.querySelectorAll('[data-i-ph]').forEach(el=>{const k=el.getAttribute('data-i-ph');if(T[l][k])el.placeholder=T[l][k];});
+  document.querySelectorAll('[data-i]').forEach(el=>{
+    const k=el.getAttribute('data-i');
+    if(T[l][k]!=null) el.innerHTML=T[l][k];
+  });
+  document.querySelectorAll('[data-i-ph]').forEach(el=>{
+    const k=el.getAttribute('data-i-ph');
+    if(T[l][k]) el.placeholder=T[l][k];
+  });
   document.documentElement.lang=l;
+  // Re-init char split for new language
+  initCharSplit();
 }
 
-/* ═══ LOADER ═══ */
-window.addEventListener('load',()=>setTimeout(()=>document.getElementById('ldr').classList.add('out'),1500));
+/* ═══════════════════════════════════════
+   LOADER
+═══════════════════════════════════════ */
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('ldr').classList.add('out');
+    // Trigger hero animations after loader
+    setTimeout(heroIn, 100);
+  }, 1500);
+});
 
-/* ═══ CURSOR ═══ */
+/* ═══════════════════════════════════════
+   HERO ENTRANCE ANIMATION
+═══════════════════════════════════════ */
+function heroIn(){
+  // Char split for hero title
+  document.querySelectorAll('.split-char').forEach((el,i)=>{
+    const text=el.textContent;
+    el.innerHTML='';
+    [...text].forEach((ch,j)=>{
+      const s=document.createElement('span');
+      s.className='char';
+      s.textContent=ch===' '?'\u00a0':ch;
+      s.style.transitionDelay=(i*0.15+j*0.04)+'s';
+      el.appendChild(s);
+    });
+    el.classList.add('in');
+  });
+
+  // blur-in elements
+  document.querySelectorAll('.blur-in').forEach(el=>el.classList.add('in'));
+
+  // lego drops for stats (after slight delay)
+  setTimeout(()=>{
+    document.querySelectorAll('#hero .lego-drop').forEach(el=>el.classList.add('in'));
+  }, 400);
+}
+
+function initCharSplit(){
+  document.querySelectorAll('.split-char').forEach(el=>{
+    const di=el.getAttribute('data-i');
+    const txt=T[L][di]||el.textContent;
+    el.innerHTML='';
+    [...txt].forEach((ch,j)=>{
+      const s=document.createElement('span');
+      s.className='char';
+      s.textContent=ch===' '?'\u00a0':ch;
+      s.style.transitionDelay=(j*0.04)+'s';
+      el.appendChild(s);
+    });
+    if(el.classList.contains('in')){
+      // already visible, instantly apply
+      el.querySelectorAll('.char').forEach(c=>{
+        c.style.transform='translateY(0) rotate(0deg)';
+        c.style.opacity='1';
+      });
+    }
+  });
+}
+
+/* ═══════════════════════════════════════
+   CURSOR
+═══════════════════════════════════════ */
 if(window.matchMedia('(pointer:fine)').matches){
   const c1=document.getElementById('c1'),c2=document.getElementById('c2');
   let mx=0,my=0,rx=0,ry=0;
@@ -717,10 +860,14 @@ if(window.matchMedia('(pointer:fine)').matches){
   });
 }
 
-/* ═══ NAV ═══ */
+/* ═══════════════════════════════════════
+   NAV
+═══════════════════════════════════════ */
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sc',scrollY>40));
 
-/* ═══ BURGER ═══ */
+/* ═══════════════════════════════════════
+   BURGER
+═══════════════════════════════════════ */
 function toggleMenu(){
   document.getElementById('burger').classList.toggle('open');
   document.getElementById('mmenu').classList.toggle('open');
@@ -732,106 +879,69 @@ function closeMenu(){
   document.body.style.overflow='';
 }
 
-/* ═══ REVEAL ═══ */
-const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.05});
-document.querySelectorAll('.rv-anim').forEach(e=>obs.observe(e));
-document.querySelectorAll('.price-wrap .pc,.port-grid .pj,.rev-grid .rv,.team-grid .tm,.courses .course,.svc-list .svc-item').forEach((e,i)=>e.style.transitionDelay=(i*.06)+'s');
+/* ═══════════════════════════════════════
+   SCROLL REVEAL (IntersectionObserver)
+═══════════════════════════════════════ */
+const obs=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting) e.target.classList.add('in');
+}),{threshold:.08,rootMargin:'0px 0px -40px 0px'});
 
-/* ═══ COUNTERS ═══ */
-document.querySelectorAll('[data-count]').forEach(el=>{
-  const t=+el.dataset.count;
-  const tick=()=>{const v=+el.textContent+1;el.textContent=v;if(v<t)setTimeout(tick,55);};
-  tick();
+document.querySelectorAll(
+  '.rv-anim,.lego-drop,.slide-left,.slide-right,.scale-up,.blur-in,.line-draw'
+).forEach(e=>{
+  // Don't observe elements already in hero (handled by heroIn)
+  if(!e.closest('#hero')) obs.observe(e);
 });
 
-/* ═══ FORM ═══ */
+/* ═══════════════════════════════════════
+   PARALLAX HERO TITLE
+═══════════════════════════════════════ */
+window.addEventListener('scroll',()=>{
+  const y=window.scrollY;
+  const title=document.getElementById('heroTitle');
+  if(title && y<window.innerHeight){
+    title.style.transform=`translateY(${y*0.15}px)`;
+  }
+});
+
+/* ═══════════════════════════════════════
+   COUNTERS
+═══════════════════════════════════════ */
+document.querySelectorAll('[data-count]').forEach(el=>{
+  const target=+el.dataset.count;
+  let current=0;
+  const step=Math.ceil(target/20);
+  const interval=setInterval(()=>{
+    current=Math.min(current+step,target);
+    el.textContent=current;
+    if(current>=target) clearInterval(interval);
+  },55);
+});
+
+/* ═══════════════════════════════════════
+   FORM — SINGLE CLEAN VERSION
+═══════════════════════════════════════ */
 function doSend(){
   const n=document.getElementById('fn').value.trim();
   const c=document.getElementById('fc').value.trim();
   const t=document.getElementById('ft').value;
   const m=document.getElementById('fm').value.trim();
   const lb={dev:'Dev',teach:'Learning',bot:'Bot',other:'Other'};
+
+  // Reset borders
   document.querySelectorAll('.fi').forEach(el=>el.style.borderColor='');
-  if(!n){document.getElementById('fn').style.borderColor='var(--r)';return;}
-  if(!c){document.getElementById('fc').style.borderColor='var(--r)';return;}
+
+  // Validate
+  if(!n){document.getElementById('fn').style.borderColor='var(--r)';document.getElementById('fn').focus();return;}
+  if(!c){document.getElementById('fc').style.borderColor='var(--r)';document.getElementById('fc').focus();return;}
+
   const txt=`🔴 New request — NovaCore\n\n👤 ${n}\n📬 ${c}\n📋 ${lb[t]||'—'}\n💬 ${m||'—'}`;
   window.open(`https://t.me/Dexter1938?text=${encodeURIComponent(txt)}`,'_blank');
 }
 
-/* ═══ FORM ═══ */
-function doSend(){
-  const n=document.getElementById('fn').value.trim();
-  const c=document.getElementById('fc').value.trim();
-  const t=document.getElementById('ft').value;
-  const m=document.getElementById('fm').value.trim();
-  const lb={dev:'Dev',teach:'Learning',bot:'Bot',other:'Other'};
-  document.querySelectorAll('.fi').forEach(el=>el.style.borderColor='');
-  if(!n){document.getElementById('fn').style.borderColor='var(--r)';return;}
-  if(!c){document.getElementById('fc').style.borderColor='var(--r)';return;}
-  const txt=`🔴 New request — NovaCore\n\n👤 ${n}\n📬 ${c}\n📋 ${lb[t]||'—'}\n💬 ${m||'—'}`;
-  window.open(`https://t.me/Dexter1938?text=${encodeURIComponent(txt)}`,'_blank');
-}
-
-<script>
-/* ═══ VISITOR TRACKER SERVER ═══ */
-const TG_TOKEN = '8795424883:AAHJDcnMxFWzuIK4SCqNVtDhTB3kypfbV0w';
-const TG_CHAT  = '8131396901';
-
-(async function track(){
-  try{
-    const ua = navigator.userAgent || '';
-    const mob = /Android|iPhone|iPad|Mobile/i.test(ua);
-    const ref = document.referrer || 'direct';
-    const screen = window.screen.width + 'x' + window.screen.height;
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '?';
-    const lang = navigator.language || '?';
-    const page = window.location.href || '?';
-
-    let ip='?', country='?', city='?', isp='?';
-
-    try{
-      const r = await fetch('/api/track');
-      if(r.ok){
-        const d = await r.json();
-        ip = d.ip || '?';
-        country = d.country || '?';
-        city = d.city || '?';
-        isp = d.isp || '?';
-      }
-    }catch(_){}
-
-    const now = new Date().toLocaleString('ru-RU', { timeZone:'Europe/Kyiv' });
-
-    const msg =
-      `👁 Новый визит — NovaCore\n\n` +
-      `📱 ${mob ? 'Mobile' : 'Desktop'}\n` +
-      `🌍 ${city}, ${country}\n` +
-      `🌐 IP: ${ip}\n` +
-      `🏢 ISP: ${isp}\n` +
-      `🔗 Источник: ${ref.length > 50 ? ref.slice(0,50) + '…' : ref}\n` +
-      `📄 Страница: ${page}\n` +
-      `💬 Lang: ${lang}\n` +
-      `📐 Экран: ${screen}\n` +
-      `🕐 Время: ${now}\n` +
-      `⏱ TZ: ${tz}`;
-
-    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: TG_CHAT,
-        text: msg
-      })
-    });
-  }catch(_){}
-})();
-</script>
-
-setL('en');
-</script>
-</body>
-</html>
-
+/* ═══════════════════════════════════════
+   INIT
+═══════════════════════════════════════ */
 setL('en');
 </script>
 </body>
